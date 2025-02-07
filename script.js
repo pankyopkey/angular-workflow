@@ -2,40 +2,15 @@
 var isDarkMode = false; // is accessed by html elements (button) so must be declared in script scope
 
 let nodeDataArray = [
-    { "key": -1, "category": "Source", "text": "Search" },
-    { "key": -2, "category": "Source", "text": "Referral" },
-    { "key": -3, "category": "Source", "text": "Advertising" },
+    { "key": 1, "category": "RoundedLeftRectangle", "text": "When clicking ‘Test workflow’" },
+    { "key": 2, "category": "RoundedLeftRectangle", "text": "When chat message received" },
+    { "key": 4, "category": "RoundedRectangle", "text": "Basic LLM Chain" },
+    { "key": 3, "category": "RoundedSquare", "text": "Code" },
+    { "key": 5, "category": "Circle", "text": "Azure OpenAI Chat Model" },
 
-    { "key": 0, "text": "Homepage" },
-    { "key": 1, "text": "Products" },
-    { "key": 2, "text": "Buy" },
-    { "key": 3, "text": "Samples" },
-    { "key": 5, "text": "Documentation" },
-    { "key": 6, "text": "Download" },
+    
 
-    { "key": 100, "category": "DesiredEvent", "text": "Ordered!" },
-    { "key": 101, "category": "DesiredEvent", "text": "Downloaded!" },
-
-    {
-        "key": 200, "category": "UndesiredEvent",
-        "reasonsList": [
-            { "text": "Needs redesign?" },
-            { "text": "Wrong Product?" }]
-    },
-    {
-        "key": 201, "category": "UndesiredEvent",
-        "reasonsList": [
-            { "text": "Need better samples?" },
-            { "text": "Bad landing page for Advertising?" }]
-    },
-    {
-        "key": 202, "category": "UndesiredEvent",
-        "reasonsList": [
-            { "text": "Reconsider Pricing?" },
-            { "text": "Confusing Cart?" }]
-    },
-
-    { "key": 300, "category": "Comment", "text": "Add notes with general comments for the next team meeting" }
+    
 
 ]
 let linkDataArray = [
@@ -80,10 +55,13 @@ var undesiredEventTextColor = 'whitesmoke';
 
 var lineColor = '#0D2C54';
 
-var bigfont = 'bold 13pt Helvetica, Arial, sans-serif';
+var bigfont = 'bold 10pt Helvetica, Arial, sans-serif';
 var smallfont = 'bold 11pt Helvetica, Arial, sans-serif';
 
 function init() {
+
+        
+    const $ = go.GraphObject.make;
 
     myDiagram = new go.Diagram('myDiagramDiv', {
         // have mouse wheel events zoom in and out instead of scroll up and down
@@ -137,9 +115,83 @@ function init() {
                 .bindTwoWay('text')
         );
 
-    myDiagram.nodeTemplateMap.add('Source',
+
+
+    // myDiagram.nodeTemplateMap.add('RoundedLeftRectangle',
+    //     new go.Node('Auto', {
+    //         isShadowed: false,
+    //         shadowBlur: 2,
+    //         shadowColor: blueShadow,
+    //         shadowOffset: new go.Point(4, 6)
+    //     })
+    //         .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
+    //         .add(
+    //             new go.Shape('RoundedLeftRectangle', {
+    //                 name: 'SHAPE',
+    //                 stroke: 'rgba(0, 0, 0, 0)',
+    //                 portId: '',
+    //                 fromLinkable: true,
+    //                 cursor: 'pointer',
+    //                 fromEndSegmentLength: 40,
+    //                 parameter1:15,
+    //                 fill:'#ffffff',
+    //                 stroke:"#ccc",
+    //                 strokeWidth:2,
+    //                 minSize:new go.Size(90, 80)
+    //             }),
+    //             new go.TextBlock('Source', textStyle())
+    //                 .bindTwoWay('text')
+    //         )
+    // );
+
+    myDiagram.nodeTemplateMap.add('RoundedLeftRectangle',
+        $(go.Node,'Auto', {
+            isShadowed: false,
+            shadowBlur: 2,
+            shadowColor: blueShadow,
+            shadowOffset: new go.Point(4, 6),
+        }, 
+        $(go.Panel, "Vertical",
+            $(go.Panel, "Auto",
+                new go.Shape('RoundedLeftRectangle', {
+                    name: 'SHAPE',
+                    stroke: 'rgba(0, 0, 0, 0)',
+                    portId: '',
+                    //fromLinkable: true,
+                    cursor: 'pointer',
+                    fromEndSegmentLength: 40,
+                    fill:'#ffffff',
+                    stroke:"#ccc",
+                    strokeWidth:2,
+                    minSize:new go.Size(40, 40),
+                    cursor: 'move',
+                    parameter1:15,
+                    desiredSize:new go.Size(90, 80)
+                }),
+            ),
+            $(go.Panel, "Auto",
+                new go.TextBlock('Source',{
+                    wrap: go.TextBlock.WrapFit,
+                    textAlign: "center",
+                    maxLines: 3,
+                    overflow: go.TextBlock.OverflowEllipsis,
+                    alignment: go.Spot.Center,
+                    font: bigfont,
+                    // maxSize: new go.Size(70, 40),
+                    //width: 140,
+                    desiredSize: new go.Size(140, NaN),
+                    cursor: 'move',
+                    margin: 5,
+                    name: 'TEXTBLOCK_NAME',
+                }).bindTwoWay('text')
+            )
+        )
+        )
+    );
+
+    myDiagram.nodeTemplateMap.add('RoundedRectangle',
         new go.Node('Auto', {
-            isShadowed: true,
+            isShadowed: false,
             shadowBlur: 2,
             shadowColor: blueShadow,
             shadowOffset: new go.Point(4, 6)
@@ -148,39 +200,116 @@ function init() {
             .add(
                 new go.Shape('RoundedRectangle', {
                     name: 'SHAPE',
-                    fill: blue,
                     stroke: 'rgba(0, 0, 0, 0)',
                     portId: '',
                     fromLinkable: true,
                     cursor: 'pointer',
-                    fromEndSegmentLength: 40
-                })
-                    .bind('fill', 'color'),
+                    fromEndSegmentLength: 40,
+                    fill:'#ffffff',
+                    stroke:"#ccc",
+                    strokeWidth:2,
+                    minSize:new go.Size(200, 80)
+
+                }),
                 new go.TextBlock('Source', textStyle())
                     .bindTwoWay('text')
             )
     );
-
-    myDiagram.nodeTemplateMap.add('DesiredEvent',
+    myDiagram.nodeTemplateMap.add('RoundedSquare',
         new go.Node('Auto', {
-            isShadowed: true,
+            isShadowed: false,
             shadowBlur: 2,
-            shadowColor: greenShadow,
+            shadowColor: blueShadow,
             shadowOffset: new go.Point(4, 6)
         })
             .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
             .add(
                 new go.Shape('RoundedRectangle', {
-                    fill: green,
-                    stroke: null,
+                    name: 'SHAPE',
+                    stroke: 'rgba(0, 0, 0, 0)',
                     portId: '',
-                    toLinkable: true,
-                    toEndSegmentLength: 50
-                })
-                    .bind('fill', 'color'),
-                new go.TextBlock('Success!', textStyle())
+                    fromLinkable: true,
+                    cursor: 'pointer',
+                    fromEndSegmentLength: 40,
+                    fill:'#ffffff',
+                    stroke:"#ccc",
+                    strokeWidth:2,
+                    minSize:new go.Size(80, 80)
+
+                }),
+                new go.TextBlock('Source', textStyle())
                     .bindTwoWay('text')
             )
+    );
+    myDiagram.nodeTemplateMap.add('RoundedSquare',
+        new go.Node('Auto', {
+            isShadowed: false,
+            shadowBlur: 2,
+            shadowColor: blueShadow,
+            shadowOffset: new go.Point(4, 6)
+        })
+            .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
+            .add(
+                new go.Shape('RoundedRectangle', {
+                    name: 'SHAPE',
+                    stroke: 'rgba(0, 0, 0, 0)',
+                    portId: '',
+                    fromLinkable: true,
+                    cursor: 'pointer',
+                    fromEndSegmentLength: 40,
+                    fill:'#ffffff',
+                    stroke:"#ccc",
+                    strokeWidth:2,
+                    minSize:new go.Size(80, 80)
+
+                }),
+                new go.TextBlock('Source', textStyle())
+                    .bindTwoWay('text')
+            )
+    );
+
+    myDiagram.nodeTemplateMap.add('Circle',
+        $(go.Node,'Auto', {
+            isShadowed: false,
+            shadowBlur: 2,
+            shadowColor: blueShadow,
+            shadowOffset: new go.Point(4, 6),
+        }, 
+        $(go.Panel, "Vertical",
+            $(go.Panel, "Auto",
+                new go.Shape('Circle', {
+                    name: 'SHAPE',
+                    stroke: 'rgba(0, 0, 0, 0)',
+                    portId: '',
+                    //fromLinkable: true,
+                    cursor: 'pointer',
+                    fromEndSegmentLength: 40,
+                    fill:'#ffffff',
+                    stroke:"#ccc",
+                    strokeWidth:2,
+                    minSize:new go.Size(40, 40),
+                    cursor: 'move',
+                    desiredSize:new go.Size(70, 70)
+                }),
+            ),
+            $(go.Panel, "Auto",
+                new go.TextBlock('Source',{
+                    wrap: go.TextBlock.WrapFit,
+                    textAlign: "center",
+                    maxLines: 3,
+                    overflow: go.TextBlock.OverflowEllipsis,
+                    alignment: go.Spot.Center,
+                    font: bigfont,
+                    // maxSize: new go.Size(70, 40),
+                    //width: 140,
+                    desiredSize: new go.Size(140, NaN),
+                    cursor: 'move',
+                    margin: 5,
+                    name: 'TEXTBLOCK_NAME',
+                }).bindTwoWay('text')
+            )
+        )
+        )
     );
 
     // Undesired events have special adornments that allows adding and removing additional "reasons"
