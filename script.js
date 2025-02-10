@@ -104,6 +104,7 @@ function init() {
         cursor: 'pointer',
         shadowOffset: new go.Point(4, 6),
         selectionAdorned: false,
+        
         mouseEnter: (e, obj) => {
             changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
             changeProperty(obj, 'MENU_SECTION', 'visible', true)
@@ -116,13 +117,12 @@ function init() {
     },
         // Main Vertical panel for layout
         $(go.Panel, "Vertical",{
-            
+            //height:150,
         },
 
-            $(go.Panel, "Horizontal", {
-                name: "MENU_SECTION",
-                visible: false
-            },
+        $(go.Panel, "Auto", {height:40,},
+
+            $(go.Panel, "Auto",{name: "MENU_SECTION",visible: false,},
                 new go.Shape('PlusLine', {
                     name: 'SHAPE',
                     portId: '',
@@ -133,7 +133,7 @@ function init() {
                     margin: 3,
                     desiredSize: new go.Size(20, 20)  // Size of the rectangle
                 }),
-            ),
+            )),
             // First panel: This is used to create RoundedLeftRectangle shape
             $(go.Panel, "Auto",
                 new go.Shape({
