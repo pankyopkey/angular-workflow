@@ -3,11 +3,11 @@ var isDarkMode = false; // is accessed by html elements (button) so must be decl
 
 let nodeDataArray = [
     // { "key": 1, "category": "firstNode", "text": "Add First Step.." },
-    { "key": 1, "figure": "RoundedLeftRectangle", "text": "When clicking ‘Test workflow’", geometry: 'F M15 15 L0 1 M0 0 L0 11.25 M0 1.2 L11.25 0 Z' },
-    { "key": 2, "figure": "RoundedRectangle", "text": "When chat message received", geometry: 'F M15 15 L0 0 M0 0 L0 11.25 M0 0 L11.25 0 Z' },
-    { "key": 4, "figure": "RoundedSquare", "text": "Basic LLM Chain" },
-    { "key": 3, "figure": "Circle", "text": "Code" },
-    { "key": 5, "figure": "RoundedRectangle", "text": "Azure OpenAI Chat Model", geometry: 'F M15 15 L0 0 M0 0 L0 11.25 M0 0 L11.25 0 Z' }
+    { "key": 1, "figure": "RoundedLeftRectangle", "text": "When clicking ‘Test workflow’", source: 'images/ai.png' },
+    { "key": 2, "figure": "RoundedRectangle", "text": "When chat message received", source: 'images/uparrow.png' },
+    { "key": 4, "figure": "RoundedSquare", "text": "Basic LLM Chain" ,source: 'images/code.png'},
+    { "key": 3, "figure": "Circle", "text": "Code" ,source: 'images/ai.png'},
+    { "key": 5, "figure": "RoundedRectangle", "text": "Azure OpenAI Chat Model", source: 'images/ai.png' }
 
 ]
 let linkDataArray = [
@@ -150,14 +150,11 @@ function init() {
                 ).bind('figure'),
 
                 // Second panel: It is used to add shape inside shape
-                $(go.Shape, {
+                $(go.Picture, {
                     name: 'INSIDE_SHAPE',
-                    strokeWidth: 1,
-                    fill: 'gray',
-                    stroke: 'white',
                     desiredSize: new go.Size(40, 40)
                 },
-                    new go.Binding("figure"),
+                    new go.Binding("source"),
 
                 )
 
