@@ -50,7 +50,7 @@ function init() {
         "clickCreatingTool.archetypeNodeData": { text: "Node", color: "lightgray" },
         //initialAutoScale: go.AutoScale.UniformToFill,
         'linkingTool.direction': go.LinkingDirection.AllSides,
-        grid: $(go.Panel, "Grid",{ gridCellSize: new go.Size(30, 30) },$(go.Shape, "LineH", { strokeDashArray: [1.2, 30], stroke:'#7e8186' })),
+        grid: $(go.Panel, "Grid",{ gridCellSize: new go.Size(20, 20) },$(go.Shape, "LineH", { strokeDashArray: [1.2, 20], stroke:'#7e8186' })),
         layout: new go.LayeredDigraphLayout({
             isInitial: true,
             isOngoing: false,
