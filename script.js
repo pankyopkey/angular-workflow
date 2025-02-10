@@ -256,12 +256,111 @@ function init() {
             fromSpot: go.Spot.AllSides,
             toSpot: go.Spot.AllSides
         },
-        { selectable: true },
-        $(go.Shape, { isPanelMain: true, strokeWidth: 6, stroke: "transparent" },
+        { 
+            selectable: true,
+            mouseEnter: (e, obj) => {
+                changeProperty(obj, 'LINK_MENU_SECTION', 'visible', true);
+                // const shape = obj.findObject('IMG_BOX');
+                // const image = obj.findObject('INSIDE_SHAPE');
+                // if(shape && image){
+                //     shape.stroke = '#e74266';
+                //     image.filter = 'grayscale(0%)'
+                // }
+            },
+            mouseLeave: (e, obj) => {
+                changeProperty(obj, 'LINK_MENU_SECTION', 'visible', false)
+                // const shape = obj.findObject('IMG_BOX');
+                // const image = obj.findObject('INSIDE_SHAPE');
+                // if(shape && image){
+                //     shape.stroke = '#7e8186';
+                //     image.filter = 'grayscale(100%)'
+                // }
+                // shape.stroke = '#7e8186';
+            },
+        },
+        $(go.Shape, { isPanelMain: true, strokeWidth: 20, stroke: "transparent" },
             new go.Binding("stroke", "isHighlighted", h => h ? "red" : "transparent").ofObject()
         ),
         $(go.Shape, { isPanelMain: true, stroke: "#002f49", strokeWidth: 2, toLinkable: true, toLinkableSelfNode: true }), // the main path
         $(go.Shape, { name: "AH", toArrow: "RoundedTriangle", scale: 1.2, fill: "#002f49", stroke: "#002f49", toLinkable: true, toLinkableSelfNode: true }),  // the arrowhead
+
+        $(go.Panel, "Horizontal",
+            {margin: new go.Margin(-20, 20, -20, 20), name:'LINK_MENU_SECTION', visible: false},
+            $(go.Panel, 'Spot', { margin:3}, 
+                {
+                    mouseEnter: (e, obj) => {
+                        const shape = obj.findObject('IMG_BOX');
+                        const image = obj.findObject('INSIDE_SHAPE');
+                        if(shape && image){
+                            shape.stroke = '#e74266';
+                            image.filter = 'grayscale(0%)'
+                        }
+                    },
+                    mouseLeave: (e, obj) => {
+                        const shape = obj.findObject('IMG_BOX');
+                        const image = obj.findObject('INSIDE_SHAPE');
+                        if(shape && image){
+                            shape.stroke = '#7e8186';
+                            image.filter = 'grayscale(100%)'
+                        }
+                    },
+                    click: (e, obj) => {
+                        console.log(obj)
+                    },
+                },
+                new go.Shape("RoundedRectangle", {name:'IMG_BOX', width: 20, height: 20, strokeWidth: 1, fill: '#fff', stroke: "#7e8186" } ),
+                $(go.Panel, "Spot",
+                    $(go.Picture, {
+                        name: 'INSIDE_SHAPE',
+                        desiredSize: new go.Size(14, 14),
+                        source: 'images/add.png',
+                        filter: 'grayscale(100%)',
+                        margin: 2,
+                        filter: 'grayscale(100%)',
+                        cursor: 'pointer',
+                        imageStretch: go.ImageStretch.Uniform,
+                        // stroke:'#e74266',
+                    }),
+                )
+            ),
+            $(go.Panel, 'Spot',  { margin:3}, 
+                {
+                    mouseEnter: (e, obj) => {
+                        const shape = obj.findObject('IMG_BOX');
+                        const image = obj.findObject('INSIDE_SHAPE');
+                        if(shape && image){
+                            shape.stroke = '#e74266';
+                            image.filter = 'grayscale(0%)'
+                        }
+                    },
+                    mouseLeave: (e, obj) => {
+                        const shape = obj.findObject('IMG_BOX');
+                        const image = obj.findObject('INSIDE_SHAPE');
+                        if(shape && image){
+                            shape.stroke = '#7e8186';
+                            image.filter = 'grayscale(100%)'
+                        }
+                    },
+                    click: (e, obj) => {
+                        console.log(obj)
+                    },
+                },
+                new go.Shape("RoundedRectangle", {name:'IMG_BOX', width: 20, height: 20, strokeWidth: 1, fill: '#fff', stroke: "#7e8186" } ),
+                $(go.Panel, "Spot",
+                    $(go.Picture, {
+                        name: 'INSIDE_SHAPE',
+                        desiredSize: new go.Size(14, 14),
+                        source: 'images/delete.png',
+                        filter: 'grayscale(100%)',
+                        margin: 2,
+                        filter: 'grayscale(100%)',
+                        cursor: 'pointer',
+                        imageStretch: go.ImageStretch.Uniform,
+                        // stroke:'#e74266',
+                    }),
+                )
+            ),
+        )
 
     )
 
