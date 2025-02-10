@@ -48,8 +48,8 @@ function init() {
         // have mouse wheel events zoom in and out instead of scroll up and down
         'toolManager.mouseWheelBehavior': go.WheelMode.Zoom,
         "clickCreatingTool.archetypeNodeData": { text: "Node", color: "lightgray" },
-        initialAutoScale: go.AutoScale.UniformToFill,
-        'linkingTool.direction': go.LinkingDirection.ForwardsOnly,
+        //initialAutoScale: go.AutoScale.UniformToFill,
+        //'linkingTool.direction': go.LinkingDirection.ForwardsOnly,
         layout: new go.LayeredDigraphLayout({
             isInitial: true,
             isOngoing: false,
@@ -57,8 +57,8 @@ function init() {
         }),
         'undoManager.isEnabled': true,
         "Modified": onModified,
-        "contentAlignment": go.Spot.Center,
-        "initialContentAlignment": go.Spot.TopLeft,
+        // "contentAlignment": go.Spot.Center,
+        // "initialContentAlignment": go.Spot.TopLeft,
         "animationManager.isEnabled": true,
     });
 
@@ -87,7 +87,6 @@ function init() {
         shadowColor: blueShadow,
         cursor: 'pointer',
         shadowOffset: new go.Point(4, 6),
-        selectionAdorned: false,
         mouseEnter: (e, obj) => {
             changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
             changeProperty(obj, 'MENU_SECTION', 'visible', true)
@@ -102,77 +101,77 @@ function init() {
         $(go.Shape, { strokeWidth: 0, fill: "transparent" }),
         $(go.Panel, "Vertical",{},
 
-        $(go.Panel, "Auto", {height:40,},
-
-            $(go.Panel, "Horizontal",{name: "MENU_SECTION", visible: false,},
-                $(go.Picture, {
-                    name: 'INSIDE_SHAPE',
-                    desiredSize: new go.Size(15, 15),
-                    source:'images/play-button.png',
-                    margin:3,
-                    filter: 'grayscale(100%)',
-                    click:(e, obj) => {
-                        console.log(obj)
-                    },
-                    mouseEnter: (e, obj) => {
-                        obj.filter = 'grayscale(0%)'
-                    },
-                    mouseLeave: (e, obj) => {
-                        obj.filter = 'grayscale(100%)'
-                    },
-                }),
-                $(go.Picture, {
-                    name: 'INSIDE_SHAPE',
-                    desiredSize: new go.Size(15, 15),
-                    source:'images/delete.png',
-                    filter: 'grayscale(100%)',
-                    margin:3,
-                    filter: 'grayscale(100%)',
-                    click:(e, obj) => {
-                        console.log(obj)
-                    },
-                    mouseEnter: (e, obj) => {
-                        obj.filter = 'grayscale(0%)'
-                    },
-                    mouseLeave: (e, obj) => {
-                        obj.filter = 'grayscale(100%)'
-                    },
-                }),
-                $(go.Picture, {
-                    name: 'INSIDE_SHAPE',
-                    desiredSize: new go.Size(15, 15),
-                    source:'images/power-switch.png',
-                    filter: 'grayscale(100%)',
-                    margin:3,
-                    filter: 'grayscale(100%)',
-                    click:(e, obj) => {
-                        console.log(obj)
-                    },
-                    mouseEnter: (e, obj) => {
-                        obj.filter = 'grayscale(0%)'
-                    },
-                    mouseLeave: (e, obj) => {
-                        obj.filter = 'grayscale(100%)'
-                    },
-                }),
-                $(go.Picture, {
-                    name: 'INSIDE_SHAPE',
-                    desiredSize: new go.Size(15, 15),
-                    filter: 'grayscale(100%)',
-                    source:'images/dots.png',
-                    margin:3,
-                    filter: 'grayscale(100%)',
-                    click:(e, obj) => {
-                        console.log(obj)
-                    },
-                    mouseEnter: (e, obj) => {
-                        obj.filter = 'grayscale(0%)'
-                    },
-                    mouseLeave: (e, obj) => {
-                        obj.filter = 'grayscale(100%)'
-                    },
-                }),
-            )),
+            $(go.Panel, "Auto", {height:40,},
+                $(go.Panel, "Horizontal",{name: "MENU_SECTION", visible: false,},
+                    $(go.Picture, {
+                        name: 'INSIDE_SHAPE',
+                        desiredSize: new go.Size(12, 12),
+                        source:'images/play-button.png',
+                        margin: new go.Margin(3, 5, 5, 3),
+                        filter: 'grayscale(100%)',
+                        click:(e, obj) => {
+                            console.log(obj)
+                        },
+                        mouseEnter: (e, obj) => {
+                            obj.filter = 'grayscale(0%)'
+                        },
+                        mouseLeave: (e, obj) => {
+                            obj.filter = 'grayscale(100%)'
+                        },
+                    }),
+                    $(go.Picture, {
+                        name: 'INSIDE_SHAPE',
+                        desiredSize: new go.Size(12, 12),
+                        source:'images/delete.png',
+                        filter: 'grayscale(100%)',
+                        margin: new go.Margin(3, 5, 5, 3),
+                        filter: 'grayscale(100%)',
+                        click:(e, obj) => {
+                            console.log(obj)
+                        },
+                        mouseEnter: (e, obj) => {
+                            obj.filter = 'grayscale(0%)'
+                        },
+                        mouseLeave: (e, obj) => {
+                            obj.filter = 'grayscale(100%)'
+                        },
+                    }),
+                    $(go.Picture, {
+                        name: 'INSIDE_SHAPE',
+                        desiredSize: new go.Size(12, 12),
+                        source:'images/power-switch.png',
+                        filter: 'grayscale(100%)',
+                        margin: new go.Margin(3, 5, 5, 3),
+                        filter: 'grayscale(100%)',
+                        click:(e, obj) => {
+                            console.log(obj)
+                        },
+                        mouseEnter: (e, obj) => {
+                            obj.filter = 'grayscale(0%)'
+                        },
+                        mouseLeave: (e, obj) => {
+                            obj.filter = 'grayscale(100%)'
+                        },
+                    }),
+                    $(go.Picture, {
+                        name: 'INSIDE_SHAPE',
+                        desiredSize: new go.Size(12, 12),
+                        filter: 'grayscale(100%)',
+                        source:'images/dots.png',
+                        margin: new go.Margin(3, 5, 5, 3),
+                        filter: 'grayscale(100%)',
+                        click:(e, obj) => {
+                            console.log(obj)
+                        },
+                        mouseEnter: (e, obj) => {
+                            obj.filter = 'grayscale(0%)'
+                        },
+                        mouseLeave: (e, obj) => {
+                            obj.filter = 'grayscale(100%)'
+                        },
+                    }),
+                )
+            ),
             // First panel: This is used to create RoundedLeftRectangle shape
             $(go.Panel, "Auto",
                 new go.Shape({
@@ -184,7 +183,14 @@ function init() {
                     stroke: "#ccc",
                     strokeWidth: 2,
                     parameter1: 15,   // Rounded corners
-                    desiredSize: new go.Size(90, 80)  // Size of the rectangle
+                    desiredSize: new go.Size(90, 80),  // Size of the rectangle,
+                    // selectionAdorned: false,
+                    // fromLinkable: true,
+                    // fromLinkableSelfNode: true,
+                    // fromLinkableDuplicates: true,
+                    // toLinkable: true,
+                    // toLinkableSelfNode: true,
+                    // toLinkableDuplicates: true,
                 }
                 ).bind('figure'),
 
@@ -486,10 +492,14 @@ function init() {
 
     // replace the default Link template in the linkTemplateMap
     myDiagram.linkTemplate = new go.Link({ // the whole link panel
+        // routing: go.Link.AvoidsNodes,
+        // curve: go.Link.JumpOver,
+        // corner: 50,
         curve: go.Curve.Bezier,
+        adjusting: go.LinkAdjusting.Stretch,
         toShortLength: 5,
-        fromSpot: go.Spot.Right,
-        toSpot: go.Spot.Left
+        fromSpot: go.Spot.AllSides,
+        toSpot: go.Spot.AllSides
     })
         .add(
             new go.Shape({ // the link shape
@@ -497,7 +507,7 @@ function init() {
                 strokeWidth: 2.5
             }),
             new go.Shape({ // the arrowhead
-                toArrow: 'Kite',
+                toArrow: 'RoundedTriangle',
                 fill: lineColor,
                 stroke: lineColor,
                 scale: 1.5
