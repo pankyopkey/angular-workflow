@@ -63,20 +63,20 @@ function init() {
     });
 
     function onSelectionChanged(node) {
-        const shape = node.findObject('SHAPE');
+        const shape = node.findObject('Palceholder');
         console.log(shape)
-        // if (node.isSelected) {
-        //     if (shape) {
-        //         shape.strokeWidth = 10;
-        //     }
-        // }
+        if (node.isSelected) {
+            if (shape) {
+                shape.fill = '#2941701a';
+            }
+        }
 
-        // else {
-        //     if (shape) {
-        //         // shape.fill = "#ffffff";
-        //         shape.strokeWidth = 2;
-        //     }
-        // }
+        else {
+            if (shape) {
+                // shape.fill = "#ffffff";
+                shape.fill = 'transparent';
+            }
+        }
 
     }
 
@@ -174,33 +174,36 @@ function init() {
             ),
             // First panel: This is used to create RoundedLeftRectangle shape
             $(go.Panel, "Auto",
-                new go.Shape({
-                    name: 'SHAPE',
-                    portId: '',
-                    cursor: 'pointer',
-                    fromEndSegmentLength: 40,
-                    fill: '#ffffff',
-                    stroke: "#ccc",
-                    strokeWidth: 2,
-                    parameter1: 15,   // Rounded corners
-                    desiredSize: new go.Size(90, 80),  // Size of the rectangle,
-                    // selectionAdorned: false,
-                    // fromLinkable: true,
-                    // fromLinkableSelfNode: true,
-                    // fromLinkableDuplicates: true,
-                    // toLinkable: true,
-                    // toLinkableSelfNode: true,
-                    // toLinkableDuplicates: true,
-                }
-                ).bind('figure'),
+                $(go.Shape, {name:'Palceholder', strokeWidth: 0, fill: "transparent", parameter1: 20 }).bind('figure'),
+                $(go.Panel, "Auto",
+                    new go.Shape({
+                        name: 'SHAPE',
+                        portId: '',
+                        cursor: 'pointer',
+                        fromEndSegmentLength: 40,
+                        fill: '#ffffff',
+                        stroke: "#ccc",
+                        strokeWidth: 2,
+                        parameter1: 15,   // Rounded corners
+                        desiredSize: new go.Size(90, 80),  // Size of the rectangle,
+                        // selectionAdorned: false,
+                        // fromLinkable: true,
+                        // fromLinkableSelfNode: true,
+                        // fromLinkableDuplicates: true,
+                        // toLinkable: true,
+                        // toLinkableSelfNode: true,
+                        // toLinkableDuplicates: true,
+                    }
+                    ).bind('figure'),
 
-                // Second panel: It is used to add shape inside shape
-                $(go.Picture, {
-                    name: 'INSIDE_SHAPE',
-                    desiredSize: new go.Size(40, 40)
-                },
-                    new go.Binding("source"),
+                    // Second panel: It is used to add shape inside shape
+                    $(go.Picture, {
+                        name: 'INSIDE_SHAPE',
+                        desiredSize: new go.Size(40, 40)
+                    },
+                        new go.Binding("source"),
 
+                    )
                 )
 
             ),
