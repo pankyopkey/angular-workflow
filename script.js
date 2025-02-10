@@ -494,28 +494,54 @@ function init() {
 
 
     // replace the default Link template in the linkTemplateMap
-    myDiagram.linkTemplate = new go.Link({ // the whole link panel
-        // routing: go.Link.AvoidsNodes,
-        // curve: go.Link.JumpOver,
-        // corner: 50,
-        curve: go.Curve.Bezier,
-        adjusting: go.LinkAdjusting.Stretch,
-        toShortLength: 5,
-        fromSpot: go.Spot.AllSides,
-        toSpot: go.Spot.AllSides
-    })
-        .add(
-            new go.Shape({ // the link shape
-                stroke: lineColor,
-                strokeWidth: 2.5
-            }),
-            new go.Shape({ // the arrowhead
-                toArrow: 'RoundedTriangle',
-                fill: lineColor,
-                stroke: lineColor,
-                scale: 1.5
-            })
-        );
+    // myDiagram.linkTemplate = new go.Link({ // the whole link panel
+    //     // routing: go.Link.AvoidsNodes,
+    //     // curve: go.Link.JumpOver,
+    //     // corner: 50,
+    //     curve: go.Curve.Bezier,
+    //     adjusting: go.LinkAdjusting.Stretch,
+    //     toShortLength: 5,
+    //     fromSpot: go.Spot.AllSides,
+    //     toSpot: go.Spot.AllSides
+    // })
+    //     .add(
+    //         new go.Shape({ // the link shape
+    //             stroke: lineColor,
+    //             strokeWidth: 2.5
+    //         }),
+    //         new go.Shape({ // the arrowhead
+    //             toArrow: 'RoundedTriangle',
+    //             fill: lineColor,
+    //             stroke: lineColor,
+    //             scale: 1.5
+    //         })
+    //     );
+
+
+    this.myDiagram.linkTemplate = $(go.Link,
+
+        {
+            routing: go.Link.AvoidsNodes,
+            curve: go.Link.JumpOver,
+            corner: 50,
+            toShortLength: 0,
+            relinkableFrom: false,
+            relinkableTo: false,
+            // reshapable: true,
+            // resegmentable: true,
+            fromLinkable: true,
+            toLinkable: true,
+            fromSpot: go.Spot.AllSides,
+            toSpot: go.Spot.AllSides
+        },
+        { selectable: true },
+        $(go.Shape, { isPanelMain: true, strokeWidth: 6, stroke: "transparent" }, 
+            new go.Binding("stroke", "isHighlighted", h => h ? "red" : "transparent").ofObject()
+        ),
+        $(go.Shape, { isPanelMain: true, stroke: "#002f49", strokeWidth: 2, toLinkable: true, toLinkableSelfNode: true }), // the main path
+        $(go.Shape, { name: "AH", toArrow: "RoundedTriangle", scale: 1.2, fill: "#002f49", stroke: "#002f49", toLinkable: true, toLinkableSelfNode: true }),  // the arrowhead
+
+    )
 
 
     myDiagram.model.nodeDataArray = nodeDataArray;
