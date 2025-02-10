@@ -104,7 +104,6 @@ function init() {
         cursor: 'pointer',
         shadowOffset: new go.Point(4, 6),
         selectionAdorned: false,
-        
         mouseEnter: (e, obj) => {
             changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
             changeProperty(obj, 'MENU_SECTION', 'visible', true)
@@ -116,22 +115,78 @@ function init() {
         selectionChanged: onSelectionChanged
     },
         // Main Vertical panel for layout
-        $(go.Panel, "Vertical",{
-            //height:150,
-        },
+        $(go.Shape, { strokeWidth: 0, fill: "transparent" }),
+        $(go.Panel, "Vertical",{},
 
         $(go.Panel, "Auto", {height:40,},
 
-            $(go.Panel, "Auto",{name: "MENU_SECTION",visible: false,},
-                new go.Shape('PlusLine', {
-                    name: 'SHAPE',
-                    portId: '',
-                    fromEndSegmentLength: 40,
-                    fill: '#ffffff',
-                    stroke: "#ccc",
-                    strokeWidth: 1,
-                    margin: 3,
-                    desiredSize: new go.Size(20, 20)  // Size of the rectangle
+            $(go.Panel, "Horizontal",{name: "MENU_SECTION", visible: false,},
+                $(go.Picture, {
+                    name: 'INSIDE_SHAPE',
+                    desiredSize: new go.Size(15, 15),
+                    source:'images/play-button.png',
+                    margin:3,
+                    filter: 'grayscale(100%)',
+                    click:(e, obj) => {
+                        console.log(obj)
+                    },
+                    mouseEnter: (e, obj) => {
+                        obj.filter = 'grayscale(0%)'
+                    },
+                    mouseLeave: (e, obj) => {
+                        obj.filter = 'grayscale(100%)'
+                    },
+                }),
+                $(go.Picture, {
+                    name: 'INSIDE_SHAPE',
+                    desiredSize: new go.Size(15, 15),
+                    source:'images/delete.png',
+                    filter: 'grayscale(100%)',
+                    margin:3,
+                    filter: 'grayscale(100%)',
+                    click:(e, obj) => {
+                        console.log(obj)
+                    },
+                    mouseEnter: (e, obj) => {
+                        obj.filter = 'grayscale(0%)'
+                    },
+                    mouseLeave: (e, obj) => {
+                        obj.filter = 'grayscale(100%)'
+                    },
+                }),
+                $(go.Picture, {
+                    name: 'INSIDE_SHAPE',
+                    desiredSize: new go.Size(15, 15),
+                    source:'images/power-switch.png',
+                    filter: 'grayscale(100%)',
+                    margin:3,
+                    filter: 'grayscale(100%)',
+                    click:(e, obj) => {
+                        console.log(obj)
+                    },
+                    mouseEnter: (e, obj) => {
+                        obj.filter = 'grayscale(0%)'
+                    },
+                    mouseLeave: (e, obj) => {
+                        obj.filter = 'grayscale(100%)'
+                    },
+                }),
+                $(go.Picture, {
+                    name: 'INSIDE_SHAPE',
+                    desiredSize: new go.Size(15, 15),
+                    filter: 'grayscale(100%)',
+                    source:'images/dots.png',
+                    margin:3,
+                    filter: 'grayscale(100%)',
+                    click:(e, obj) => {
+                        console.log(obj)
+                    },
+                    mouseEnter: (e, obj) => {
+                        obj.filter = 'grayscale(0%)'
+                    },
+                    mouseLeave: (e, obj) => {
+                        obj.filter = 'grayscale(100%)'
+                    },
                 }),
             )),
             // First panel: This is used to create RoundedLeftRectangle shape
