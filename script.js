@@ -1,12 +1,14 @@
 
 var isDarkMode = false; // is accessed by html elements (button) so must be declared in script scope
 
-let nodeDataArray =   [
-    { "key": 1, "category": "RoundedLeftRectangle", "text": "When clicking ‘Test workflow’", geometry: 'F M15 15 L0 0 M0 0 L0 11.25 M0 0 L11.25 0 Z' },
-    { "key": 2, "category": "RoundedLeftRectangle", "text": "When chat message received", geometry: 'F M15 15 L0 0 M0 0 L0 11.25 M0 0 L11.25 0 Z' },
-    { "key": 4, "category": "RoundedRectangle", "text": "Basic LLM Chain" }, 
-    { "key": 3, "category": "RoundedSquare", "text": "Code" }, 
-    { "key": 5, "category": "Circle", "text": "Azure OpenAI Chat Model" }  
+let nodeDataArray = [
+    // { "key": 1, "category": "firstNode", "text": "Add First Step.." },
+    { "key": 1, "figure": "RoundedLeftRectangle", "text": "When clicking ‘Test workflow’", geometry: 'F M15 15 L0 1 M0 0 L0 11.25 M0 1.2 L11.25 0 Z' },
+    { "key": 2, "figure": "RoundedRectangle", "text": "When chat message received", geometry: 'F M15 15 L0 0 M0 0 L0 11.25 M0 0 L11.25 0 Z' },
+    { "key": 4, "figure": "RoundedSquare", "text": "Basic LLM Chain" },
+    { "key": 3, "figure": "Circle", "text": "Code" },
+    { "key": 5, "figure": "RoundedRectangle", "text": "Azure OpenAI Chat Model", geometry: 'F M15 15 L0 0 M0 0 L0 11.25 M0 0 L11.25 0 Z' }
+
 ]
 let linkDataArray = [
     { "from": -1, "to": 0 },
@@ -74,45 +76,254 @@ function init() {
         "contentAlignment": go.Spot.Center,
         "initialContentAlignment": go.Spot.TopLeft,
         "animationManager.isEnabled": true,
-        "InitialLayoutCompleted": e => {
-            // if not all Nodes have real locations, force a layout to happen
-            // if (!e.diagram.nodes.all(n => n.location.isReal())) {
-            //     e.diagram.layoutDiagram(true);
-            // }
-        }
     });
 
+    function onSelectionChanged(node) {
+        const shape = node.findObject('SHAPE');
+        console.log(shape)
+        if (node.isSelected) {
+            if (shape) {
+                shape.strokeWidth = 10;
+            }
+        }
+
+        else {
+            if (shape) {
+                // shape.fill = "#ffffff";
+                shape.strokeWidth = 2;
+            }
+        }
+
+    }
 
     // define the Node template
-    myDiagram.nodeTemplate = new go.Node('Auto', {
+    myDiagram.nodeTemplate = $(go.Node, 'Auto', {
         isShadowed: false,
-        shadowBlur: 2,
-        shadowColor: yellowShadow,
-        shadowOffset: new go.Point(4, 6)
-    })
-        .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
-        .add(
-            new go.Shape('Rectangle', {
-                fill: yellow,
-                stroke: 'rgba(0, 0, 0, 0)',
-                portId: '',
-                fromLinkable: true,
-                toLinkable: true,
-                cursor: 'pointer',
-                toEndSegmentLength: 50,
-                fromEndSegmentLength: 40
-            }),
-            new go.TextBlock('Page', {
-                margin: 10,
-                font: bigfont,
-                editable: true
-            })
-                .bindTwoWay('text')
-        );
+        shadowBlur: 0,
+        shadowColor: blueShadow,
+        cursor: 'pointer',
+        shadowOffset: new go.Point(4, 6),
+        selectionAdorned: false,
+        mouseEnter: (e, obj) => {
+            changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
+            changeProperty(obj, 'MENU_SECTION', 'visible', true)
+        },
+        mouseLeave: (e, obj) => {
+            changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
+            changeProperty(obj, 'MENU_SECTION', 'visible', false)
+        },
+        selectionChanged: onSelectionChanged
+    },
+        // Main Vertical panel for layout
+        $(go.Panel, "Vertical",{
+             minSize:300
+        },
+
+            $(go.Panel, "Horizontal", {
+                name: "MENU_SECTION",
+                visible: false
+            },
+                new go.Shape('PlusLine', {
+                    name: 'SHAPE',
+                    portId: '',
+                    fromEndSegmentLength: 40,
+                    fill: '#ffffff',
+                    stroke: "#ccc",
+                    strokeWidth: 1,
+                    margin: 3,
+                    desiredSize: new go.Size(20, 20)  // Size of the rectangle
+                }),
+            ),
+            // First panel: This is used to create RoundedLeftRectangle shape
+            $(go.Panel, "Auto",
+                new go.Shape({
+                    name: 'SHAPE',
+                    portId: '',
+                    cursor: 'pointer',
+                    fromEndSegmentLength: 40,
+                    fill: '#ffffff',
+                    stroke: "#ccc",
+                    strokeWidth: 2,
+                    parameter1: 15,   // Rounded corners
+                    desiredSize: new go.Size(90, 80)  // Size of the rectangle
+                }
+                ).bind('figure'),
+
+                // Second panel: It is used to add shape inside shape
+                $(go.Shape, {
+                    name: 'INSIDE_SHAPE',
+                    strokeWidth: 1,
+                    fill: 'gray',
+                    stroke: 'white',
+                    desiredSize: new go.Size(40, 40)
+                },
+                    new go.Binding("figure"),
+
+                )
+
+            ),
+
+            // Third panel: TextBlock (text field)
+            $(go.Panel, "Auto",
+                new go.TextBlock('', {  // Empty string as placeholder for 'text' binding
+                    wrap: go.TextBlock.WrapFit,
+                    textAlign: "center",
+                    maxLines: 3,
+                    overflow: go.TextBlock.OverflowEllipsis,
+                    alignment: go.Spot.Center,
+                    font: bigfont,
+                    desiredSize: new go.Size(140, NaN),
+                    margin: 5,
+                    name: 'TEXTBLOCK_NAME',
+                }).bindTwoWay('text')  // Bind text dynamically
+            )
+        )
+    )
 
 
 
-    // myDiagram.nodeTemplateMap.add('RoundedLeftRectangle',
+    // Create a node template map
+    // myDiagram.nodeTemplateMap = new go.Map();
+
+    // myDiagram.nodeTemplateMap.add('trigger',
+    //     $(go.Node, 'Auto', {
+    //         isShadowed: false,
+    //         shadowBlur: 0,
+    //         shadowColor: blueShadow,
+    //         shadowOffset: new go.Point(4, 6),
+    //         selectionAdorned: false,
+    //         selectionChanged: onSelectionChanged
+    //     },
+    //         // Main Vertical panel for layout
+    //         $(go.Panel, "Vertical",
+
+    //             $(go.Panel, "Horizontal", {
+    //                 name: "MENU_SECTION",
+    //                 // visible: false
+    //             },
+    //                 new go.Shape('PlusLine', {
+    //                     name: 'SHAPE',
+    //                     portId: '',
+    //                     fromEndSegmentLength: 40,
+    //                     fill: '#ffffff',
+    //                     stroke: "#ccc",
+    //                     strokeWidth: 1,
+    //                     margin: 3,
+    //                     desiredSize: new go.Size(20, 20)  // Size of the rectangle
+    //                 }),
+    //             ),
+    //             // First panel: This is used to create RoundedLeftRectangle shape
+    //             $(go.Panel, "Auto",
+    //                 new go.Shape('RoundedLeftRectangle', {
+    //                     name: 'SHAPE',
+    //                     portId: '',
+    //                     cursor: 'pointer',
+    //                     fromEndSegmentLength: 40,
+    //                     fill: '#ffffff',
+    //                     stroke: "#ccc",
+    //                     strokeWidth: 2,
+    //                     cursor: 'move',
+    //                     parameter1: 15,   // Rounded corners
+    //                     desiredSize: new go.Size(90, 80)  // Size of the rectangle
+    //                 }),
+
+    //                 // Second panel: It is used to add shape inside shape
+    //                 $(go.Shape, {
+    //                     name: 'INSIDE_SHAPE',
+    //                     strokeWidth: 5,
+    //                     fill: 'gray',
+    //                     stroke: 'gray',
+    //                     desiredSize: new go.Size(20, 30)
+    //                 },
+    //                     new go.Binding("geometry", "geometry", function (value) {
+
+    //                         if (value) {
+    //                             return go.Geometry.parse(value);
+    //                         }
+    //                         return go.Geometry.parse('F M10 10 L20 10 L20 20 L10 20 Z');
+    //                     }).makeTwoWay(),
+
+    //                 )
+
+    //             ),
+
+    //             // Third panel: TextBlock (text field)
+    //             $(go.Panel, "Auto",
+    //                 new go.TextBlock('', {  // Empty string as placeholder for 'text' binding
+    //                     wrap: go.TextBlock.WrapFit,
+    //                     textAlign: "center",
+    //                     maxLines: 3,
+    //                     overflow: go.TextBlock.OverflowEllipsis,
+    //                     alignment: go.Spot.Center,
+    //                     font: bigfont,
+    //                     desiredSize: new go.Size(140, NaN),
+    //                     cursor: 'move',
+    //                     margin: 5,
+    //                     name: 'TEXTBLOCK_NAME',
+    //                 }).bindTwoWay('text')  // Bind text dynamically
+    //             )
+    //         )
+    //     )
+    // );
+
+    // myDiagram.nodeTemplateMap.add('firstNode',
+    //     $(go.Node, 'Auto', {
+    //         selectionAdorned: false,
+    //         cursor: 'pointer',
+    //         mouseEnter: (e, obj) => { changeProperty(obj, 'PlUS_LINE', 'stroke', 'red') },
+    //         mouseLeave: (e, obj) => { changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray') },
+    //     },
+    //         // Main Vertical panel for layout
+    //         $(go.Panel, "Vertical",
+
+    //             // First panel: This is used to create RoundedLeftRectangle shape
+    //             $(go.Panel, "Auto",
+    //                 new go.Shape('RoundedRectangle', {
+    //                     name: 'SHAPE',
+    //                     portId: '',
+    //                     fromEndSegmentLength: 40,
+    //                     fill: '#ffffff',
+    //                     stroke: "#ccc",
+    //                     strokeWidth: 1,
+    //                     strokeDashArray: [6, 3],
+    //                     desiredSize: new go.Size(90, 80)  // Size of the rectangle
+    //                 }),
+
+    //                 // Second panel: It is used to add shape inside shape
+    //                 $(go.Shape, "PlusLine", {
+    //                     name: 'PlUS_LINE',
+    //                     strokeWidth: 5,
+    //                     fill: 'gray',
+    //                     stroke: 'gray',
+    //                     desiredSize: new go.Size(20, 20)
+    //                 }
+
+    //                 )
+
+    //             ),
+
+    //             // Third panel: TextBlock (text field)
+    //             $(go.Panel, "Auto",
+    //                 new go.TextBlock('', {  // Empty string as placeholder for 'text' binding
+    //                     wrap: go.TextBlock.WrapFit,
+    //                     textAlign: "center",
+    //                     maxLines: 3,
+    //                     overflow: go.TextBlock.OverflowEllipsis,
+    //                     alignment: go.Spot.Center,
+    //                     stroke: "grey",
+    //                     desiredSize: new go.Size(140, NaN),
+    //                     margin: 5,
+    //                     name: 'TEXTBLOCK_NAME',
+    //                 }).bindTwoWay('text')  // Bind text dynamically
+    //             )
+    //         )
+    //     )
+    // );
+
+
+
+
+    // myDiagram.nodeTemplateMap.add('Action',
     //     new go.Node('Auto', {
     //         isShadowed: false,
     //         shadowBlur: 2,
@@ -121,375 +332,121 @@ function init() {
     //     })
     //         .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
     //         .add(
-    //             new go.Shape('RoundedLeftRectangle', {
+    //             new go.Shape('RoundedRectangle', {
     //                 name: 'SHAPE',
     //                 stroke: 'rgba(0, 0, 0, 0)',
     //                 portId: '',
     //                 fromLinkable: true,
     //                 cursor: 'pointer',
     //                 fromEndSegmentLength: 40,
-    //                 parameter1:15,
-    //                 fill:'#ffffff',
-    //                 stroke:"#ccc",
-    //                 strokeWidth:2,
-    //                 minSize:new go.Size(90, 80)
+    //                 fill: '#ffffff',
+    //                 stroke: "#ccc",
+    //                 strokeWidth: 2,
+    //                 minSize: new go.Size(200, 80)
+
+    //             }),
+    //             new go.TextBlock('Source', textStyle())
+    //                 .bindTwoWay('text')
+    //         )
+    // );
+    // myDiagram.nodeTemplateMap.add('RoundedSquare',
+    //     new go.Node('Auto', {
+    //         isShadowed: false,
+    //         shadowBlur: 2,
+    //         shadowColor: blueShadow,
+    //         shadowOffset: new go.Point(4, 6)
+    //     })
+    //         .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
+    //         .add(
+    //             new go.Shape('RoundedRectangle', {
+    //                 name: 'SHAPE',
+    //                 stroke: 'rgba(0, 0, 0, 0)',
+    //                 portId: '',
+    //                 fromLinkable: true,
+    //                 cursor: 'pointer',
+    //                 fromEndSegmentLength: 40,
+    //                 fill: '#ffffff',
+    //                 stroke: "#ccc",
+    //                 strokeWidth: 2,
+    //                 minSize: new go.Size(80, 80)
+
+    //             }),
+    //             new go.TextBlock('Source', textStyle())
+    //                 .bindTwoWay('text')
+    //         )
+    // );
+    // myDiagram.nodeTemplateMap.add('RoundedSquare',
+    //     new go.Node('Auto', {
+    //         isShadowed: false,
+    //         shadowBlur: 2,
+    //         shadowColor: blueShadow,
+    //         shadowOffset: new go.Point(4, 6)
+    //     })
+    //         .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
+    //         .add(
+    //             new go.Shape('RoundedRectangle', {
+    //                 name: 'SHAPE',
+    //                 stroke: 'rgba(0, 0, 0, 0)',
+    //                 portId: '',
+    //                 fromLinkable: true,
+    //                 cursor: 'pointer',
+    //                 fromEndSegmentLength: 40,
+    //                 fill: '#ffffff',
+    //                 stroke: "#ccc",
+    //                 strokeWidth: 2,
+    //                 minSize: new go.Size(80, 80)
+
     //             }),
     //             new go.TextBlock('Source', textStyle())
     //                 .bindTwoWay('text')
     //         )
     // );
 
-    // Create a node template map
-    myDiagram.nodeTemplateMap = new go.Map();
-
-    myDiagram.nodeTemplateMap.add('RoundedLeftRectangle',
-        $(go.Node, 'Auto', {
-            isShadowed: false,
-            shadowBlur: 2,
-            shadowColor: blueShadow,
-            shadowOffset: new go.Point(4, 6),
-        },
-            // Main Vertical panel for layout
-            $(go.Panel, "Vertical",
-
-                // First panel: This is used to create RoundedLeftRectangle shape
-                $(go.Panel, "Auto",
-                    new go.Shape('RoundedLeftRectangle', {
-                        name: 'SHAPE',
-                        stroke: 'rgba(0, 0, 0, 0)',  // Transparent border for main rectangle
-                        portId: '',
-                        cursor: 'pointer',
-                        fromEndSegmentLength: 40,
-                        fill: '#ffffff',
-                        stroke: "#ccc",
-                        strokeWidth: 2,
-                        minSize: new go.Size(40, 40),
-                        cursor: 'move',
-                        parameter1: 15,   // Rounded corners
-                        desiredSize: new go.Size(90, 80)  // Size of the rectangle
-                    }),
-
-                    // Second panel: It is used to add shape inside shape
-                    $(go.Shape, {
-                        name: 'INSIDE_SHAPE',  
-                        margin: 3,
-                        strokeWidth: 1.5,
-                        fill: 'Black',
-                        stroke: 'Black'
-                    },
-                    new go.Binding("geometry", "geometry", function(value) {
-    
-                        if (value) {
-                            return go.Geometry.parse(value);
-                        }
-                        return go.Geometry.parse('F M10 10 L20 10 L20 20 L10 20 Z');
-                    }).makeTwoWay()
-                    )
-
-                ),
-
-                // Third panel: TextBlock (text field)
-                $(go.Panel, "Auto",
-                    new go.TextBlock('', {  // Empty string as placeholder for 'text' binding
-                        wrap: go.TextBlock.WrapFit,
-                        textAlign: "center",
-                        maxLines: 3,
-                        overflow: go.TextBlock.OverflowEllipsis,
-                        alignment: go.Spot.Center,
-                        font: bigfont,
-                        desiredSize: new go.Size(140, NaN),
-                        cursor: 'move',
-                        margin: 5,
-                        name: 'TEXTBLOCK_NAME',
-                    }).bindTwoWay('text')  // Bind text dynamically
-                )
-            )
-        )
-    );
+    // myDiagram.nodeTemplateMap.add('Process',
+    //     $(go.Node, 'Auto', {
+    //         isShadowed: false,
+    //         shadowBlur: 2,
+    //         shadowColor: blueShadow,
+    //         shadowOffset: new go.Point(4, 6),
+    //     },
+    //         $(go.Panel, "Vertical",
+    //             $(go.Panel, "Auto",
+    //                 new go.Shape('Circle', {
+    //                     name: 'SHAPE',
+    //                     stroke: 'rgba(0, 0, 0, 0)',
+    //                     portId: '',
+    //                     //fromLinkable: true,
+    //                     cursor: 'pointer',
+    //                     fromEndSegmentLength: 40,
+    //                     fill: '#ffffff',
+    //                     stroke: "#ccc",
+    //                     strokeWidth: 2,
+    //                     minSize: new go.Size(40, 40),
+    //                     cursor: 'move',
+    //                     desiredSize: new go.Size(70, 70)
+    //                 }),
+    //             ),
+    //             $(go.Panel, "Auto",
+    //                 new go.TextBlock('Source', {
+    //                     wrap: go.TextBlock.WrapFit,
+    //                     textAlign: "center",
+    //                     maxLines: 3,
+    //                     overflow: go.TextBlock.OverflowEllipsis,
+    //                     alignment: go.Spot.Center,
+    //                     font: bigfont,
+    //                     // maxSize: new go.Size(70, 40),
+    //                     //width: 140,
+    //                     desiredSize: new go.Size(140, NaN),
+    //                     cursor: 'move',
+    //                     margin: 5,
+    //                     name: 'TEXTBLOCK_NAME',
+    //                 }).bindTwoWay('text')
+    //             )
+    //         )
+    //     )
+    // );
 
 
-
-
-    myDiagram.nodeTemplateMap.add('RoundedRectangle',
-        new go.Node('Auto', {
-            isShadowed: false,
-            shadowBlur: 2,
-            shadowColor: blueShadow,
-            shadowOffset: new go.Point(4, 6)
-        })
-            .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
-            .add(
-                new go.Shape('RoundedRectangle', {
-                    name: 'SHAPE',
-                    stroke: 'rgba(0, 0, 0, 0)',
-                    portId: '',
-                    fromLinkable: true,
-                    cursor: 'pointer',
-                    fromEndSegmentLength: 40,
-                    fill: '#ffffff',
-                    stroke: "#ccc",
-                    strokeWidth: 2,
-                    minSize: new go.Size(200, 80)
-
-                }),
-                new go.TextBlock('Source', textStyle())
-                    .bindTwoWay('text')
-            )
-    );
-    myDiagram.nodeTemplateMap.add('RoundedSquare',
-        new go.Node('Auto', {
-            isShadowed: false,
-            shadowBlur: 2,
-            shadowColor: blueShadow,
-            shadowOffset: new go.Point(4, 6)
-        })
-            .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
-            .add(
-                new go.Shape('RoundedRectangle', {
-                    name: 'SHAPE',
-                    stroke: 'rgba(0, 0, 0, 0)',
-                    portId: '',
-                    fromLinkable: true,
-                    cursor: 'pointer',
-                    fromEndSegmentLength: 40,
-                    fill: '#ffffff',
-                    stroke: "#ccc",
-                    strokeWidth: 2,
-                    minSize: new go.Size(80, 80)
-
-                }),
-                new go.TextBlock('Source', textStyle())
-                    .bindTwoWay('text')
-            )
-    );
-    myDiagram.nodeTemplateMap.add('RoundedSquare',
-        new go.Node('Auto', {
-            isShadowed: false,
-            shadowBlur: 2,
-            shadowColor: blueShadow,
-            shadowOffset: new go.Point(4, 6)
-        })
-            .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
-            .add(
-                new go.Shape('RoundedRectangle', {
-                    name: 'SHAPE',
-                    stroke: 'rgba(0, 0, 0, 0)',
-                    portId: '',
-                    fromLinkable: true,
-                    cursor: 'pointer',
-                    fromEndSegmentLength: 40,
-                    fill: '#ffffff',
-                    stroke: "#ccc",
-                    strokeWidth: 2,
-                    minSize: new go.Size(80, 80)
-
-                }),
-                new go.TextBlock('Source', textStyle())
-                    .bindTwoWay('text')
-            )
-    );
-
-    myDiagram.nodeTemplateMap.add('Circle',
-        $(go.Node, 'Auto', {
-            isShadowed: false,
-            shadowBlur: 2,
-            shadowColor: blueShadow,
-            shadowOffset: new go.Point(4, 6),
-        },
-            $(go.Panel, "Vertical",
-                $(go.Panel, "Auto",
-                    new go.Shape('Circle', {
-                        name: 'SHAPE',
-                        stroke: 'rgba(0, 0, 0, 0)',
-                        portId: '',
-                        //fromLinkable: true,
-                        cursor: 'pointer',
-                        fromEndSegmentLength: 40,
-                        fill: '#ffffff',
-                        stroke: "#ccc",
-                        strokeWidth: 2,
-                        minSize: new go.Size(40, 40),
-                        cursor: 'move',
-                        desiredSize: new go.Size(70, 70)
-                    }),
-                ),
-                $(go.Panel, "Auto",
-                    new go.TextBlock('Source', {
-                        wrap: go.TextBlock.WrapFit,
-                        textAlign: "center",
-                        maxLines: 3,
-                        overflow: go.TextBlock.OverflowEllipsis,
-                        alignment: go.Spot.Center,
-                        font: bigfont,
-                        // maxSize: new go.Size(70, 40),
-                        //width: 140,
-                        desiredSize: new go.Size(140, NaN),
-                        cursor: 'move',
-                        margin: 5,
-                        name: 'TEXTBLOCK_NAME',
-                    }).bindTwoWay('text')
-                )
-            )
-        )
-    );
-
-    // Undesired events have special adornments that allows adding and removing additional "reasons"
-    var UndesiredEventAdornmentModify = new go.Adornment('Spot')
-        .add(
-            new go.Panel('Auto')
-                .add(
-                    new go.Shape({
-                        fill: null,
-                        stroke: selectColor,
-                        strokeWidth: 4
-                    }),
-                    new go.Placeholder()
-                ),
-            // the button to create a new reason, at the bottom-left corner
-            go.GraphObject.build('Button', {
-                alignment: new go.Spot(1, 1, -5, -5),
-                click: addReason
-            }) // this function is defined below
-                .bindObject('visible', '', (a) => !a.diagram.isReadOnly)
-                .add(
-                    new go.Shape('TriangleDown', { desiredSize: new go.Size(10, 10) })
-                ),
-            //the button to remove the most recent reason, above the "create" button
-            go.GraphObject.build('Button', {
-                alignment: new go.Spot(1, 1, -5, -22),
-                click: removeReason
-            }) //this function is also defined below
-                .bindObject('visible', '', (a) => !a.diagram.isReadOnly)
-                .add(
-                    new go.Shape('TriangleUp', { desiredSize: new go.Size(10, 10) })
-                )
-        );
-
-    var reasonTemplate = new go.Panel('Horizontal')
-        .add(
-            new go.TextBlock('•', {
-                margin: 4,
-                stroke: undesiredEventTextColor,
-                font: smallfont
-            }),
-            new go.TextBlock('Reason', {
-                margin: 4,
-                maxSize: new go.Size(200, NaN),
-                wrap: go.Wrap.Fit,
-                stroke: undesiredEventTextColor,
-                editable: true,
-                font: smallfont
-            })
-                .bindTwoWay('text')
-        );
-
-    myDiagram.nodeTemplateMap.add('UndesiredEvent',
-        new go.Node('Auto', {
-            isShadowed: true,
-            shadowBlur: 2,
-            shadowColor: redShadow,
-            shadowOffset: new go.Point(4, 6),
-            selectionAdornmentTemplate: UndesiredEventAdornmentModify
-        })
-            .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
-            .add(
-                new go.Shape('RoundedRectangle', {
-                    fill: red,
-                    stroke: null,
-                    portId: '',
-                    toLinkable: true,
-                    toEndSegmentLength: 50
-                }),
-                new go.Panel('Vertical', { defaultAlignment: go.Spot.Top })
-                    .add(
-                        new go.TextBlock('Drop', {
-                            ...textStyle(),
-                            stroke: undesiredEventTextColor,
-                            minSize: new go.Size(80, NaN)
-                        })
-                            .bindTwoWay('text'),
-                        new go.Panel('Vertical', {
-                            defaultAlignment: go.Spot.TopLeft,
-                            itemTemplate: reasonTemplate
-                        })
-                            .bindTwoWay('itemArray', 'reasonsList')
-                    )
-            )
-    );
-
-    myDiagram.nodeTemplateMap.add('Comment',
-        new go.Node('Auto')
-            .bindTwoWay('location', 'loc', go.Point.parse, go.Point.stringify)
-            .add(
-                new go.Shape('Rectangle', {
-                    portId: '',
-                    fill: white,
-                    stroke: null,
-                    fromLinkable: true
-                }),
-                new go.TextBlock('A comment', {
-                    margin: 10,
-                    maxSize: new go.Size(200, NaN),
-                    wrap: go.Wrap.Fit,
-                    editable: true,
-                    font: smallfont
-                })
-                    .bindTwoWay('text')
-                // no ports, because no links are allowed to connect with a comment
-            )
-    );
-
-    // clicking the add button on an UndesiredEvent node inserts a new text object into the panel
-    function addReason(e, obj) {
-        var adorn = obj.part;
-        if (adorn === null) return;
-        e.handled = true;
-        var arr = adorn.adornedPart.data.reasonsList;
-        myDiagram.startTransaction('add reason');
-        myDiagram.model.addArrayItem(arr, {});
-        myDiagram.commitTransaction('add reason');
-    }
-
-    // clicking the remove button will remove the most recent text object added to the panel
-    function removeReason(e, obj) {
-        var adorn = obj.part;
-        if (adorn === null) return;
-        e.handled = true;
-        var arr = adorn.adornedPart.data.reasonsList;
-        myDiagram.startTransaction('remove reason');
-        myDiagram.model.removeArrayItem(arr, arr.length - 1);
-        myDiagram.commitTransaction('remove reason');
-    }
-
-    // clicking the button of a default node inserts a new node to the right of the selected node,
-    // and adds a link to that new node
-    function addNodeAndLink(e, obj) {
-        var adorn = obj.part;
-        if (adorn === null) return;
-        e.handled = true;
-        var diagram = adorn.diagram;
-        diagram.startTransaction('Add State');
-        // get the node data for which the user clicked the button
-        var fromNode = adorn.adornedPart;
-        var fromData = fromNode.data;
-        // create a new "State" data object, positioned off to the right of the adorned Node
-        var toData = { text: 'new' };
-        var p = fromNode.location;
-        toData.loc = p.x + 200 + ' ' + p.y; // the "loc" property is a string, not a Point object
-        // add the new node data to the model
-        var model = diagram.model;
-        model.addNodeData(toData);
-        // create a link data from the old node data to the new node data
-        var linkdata = {};
-        linkdata[model.linkFromKeyProperty] = model.getKeyForNodeData(fromData);
-        linkdata[model.linkToKeyProperty] = model.getKeyForNodeData(toData);
-        // and add the link data to the model
-        model.addLinkData(linkdata);
-        // select the new Node
-        var newnode = diagram.findNodeForData(toData);
-        diagram.select(newnode);
-        diagram.commitTransaction('Add State');
-    }
 
     // replace the default Link template in the linkTemplateMap
     myDiagram.linkTemplate = new go.Link({ // the whole link panel
@@ -511,42 +468,9 @@ function init() {
             })
         );
 
-    // comments will have different links
-    myDiagram.linkTemplateMap.add('Comment',
-        new go.Link({
-            fromSpot: go.Spot.Center,
-            toSpot: go.Spot.Center
-        })
-            .add(
-                new go.Shape({
-                    strokeWidth: 1.5,
-                    stroke: 'darkgreen'
-                })
-            )
-    );
 
-    // when a new link is created, determine what template to use
-    myDiagram.addDiagramListener('LinkDrawn', (e) => {
-        var link = e.subject;
-        if (link.fromNode.category === 'Comment') {
-            link.category = 'Comment';
-        }
-    });
-
-    var palette = new go.Palette('myPaletteDiv', {
-        // share the template map with the Palette
-        nodeTemplateMap: myDiagram.nodeTemplateMap,
-        autoScale: go.AutoScale.Uniform // everything always fits in viewport
-    });
-
-    palette.model.nodeDataArray = [
-        { category: 'Source' },
-        {}, // default node
-        { category: 'DesiredEvent' },
-        { category: 'UndesiredEvent', reasonsList: [{}] },
-        { category: 'Comment' }
-    ];
     myDiagram.model.nodeDataArray = nodeDataArray;
+
     myDiagram.model.linkDataArray = linkDataArray;
     console.log(myDiagram.model.nodeDataArray)
 
@@ -554,6 +478,14 @@ function init() {
 }
 
 
+function changeProperty(node, key, property, value) {
+    const shape = node.findObject(key);
+    if (shape) {
+        shape[property] = value;
+    }
+
+
+}
 
 
 window.addEventListener('DOMContentLoaded', init);
