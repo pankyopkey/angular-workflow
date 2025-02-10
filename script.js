@@ -78,6 +78,7 @@ function init() {
             }
         }
 
+        hideContextMenu()
     }
 
       // This is the actual HTML context menu:
@@ -172,6 +173,7 @@ function init() {
                         filter: 'grayscale(100%)',
                         click: (e, obj) => {
                             console.log(obj)
+                            showContextMenu(obj,myDiagram)
                         },
                         mouseEnter: (e, obj) => {
                             obj.filter = 'grayscale(0%)'
@@ -274,7 +276,7 @@ function init() {
         cxElement.classList.add('show-menu');
         // we don't bother overriding positionContextMenu, we just do it here:
         var mousePt = diagram.lastInput.viewPoint;
-        cxElement.style.left = mousePt.x + 5 + 'px';
+        cxElement.style.left = mousePt.x +130 +'px';
         cxElement.style.top = mousePt.y + 'px';
 
     }
