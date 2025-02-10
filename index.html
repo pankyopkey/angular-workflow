@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Go JS</title>
     <script src="https://cdn.jsdelivr.net/npm/gojs@3.0.19/release/go.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
     <div id="sample">
-        
-        <div style="width: 100%; height: 100%; display: flex; justify-content: space-between; background-color: #fcfcfc">
+
+        <div
+            style="width: 100%; height: 100%; display: flex; justify-content: space-between; background-color: #fcfcfc">
             <div id="myPaletteDiv"
                 style="width: 100px; margin-right: 2px; background-color: whitesmoke; border: 1px solid black; position: relative">
 
@@ -21,7 +23,17 @@
 
             </div>
         </div>
-       
+
+        <ul id="contextMenu" class="menu">
+            <li id="cut" class="menu-item">Cut</li>
+            <li id="copy" class="menu-item">Copy</li>
+            <li id="paste" class="menu-item">Paste</li>
+            <li id="delete" class="menu-item">Delete</li>
+            <li id="color" class="menu-item">
+                Color
+            </li>
+        </ul>
+
 
 
     </div>
