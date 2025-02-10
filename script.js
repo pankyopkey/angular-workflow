@@ -101,13 +101,13 @@ function init() {
         $(go.Shape, { strokeWidth: 0, fill: "transparent" }),
         $(go.Panel, "Vertical",{},
 
-            $(go.Panel, "Auto", {height:40,},
+            $(go.Panel, "Auto", {height:30,},
                 $(go.Panel, "Horizontal",{name: "MENU_SECTION", visible: false,},
                     $(go.Picture, {
                         name: 'INSIDE_SHAPE',
                         desiredSize: new go.Size(12, 12),
                         source:'images/play-button.png',
-                        margin: new go.Margin(3, 5, 5, 3),
+                        margin: new go.Margin(0, 5, 5, 0),
                         filter: 'grayscale(100%)',
                         click:(e, obj) => {
                             console.log(obj)
@@ -124,7 +124,7 @@ function init() {
                         desiredSize: new go.Size(12, 12),
                         source:'images/delete.png',
                         filter: 'grayscale(100%)',
-                        margin: new go.Margin(3, 5, 5, 3),
+                        margin: new go.Margin(0, 5, 5, 0),
                         filter: 'grayscale(100%)',
                         click:(e, obj) => {
                             console.log(obj)
@@ -141,7 +141,7 @@ function init() {
                         desiredSize: new go.Size(12, 12),
                         source:'images/power-switch.png',
                         filter: 'grayscale(100%)',
-                        margin: new go.Margin(3, 5, 5, 3),
+                        margin: new go.Margin(0, 5, 5, 0),
                         filter: 'grayscale(100%)',
                         click:(e, obj) => {
                             console.log(obj)
@@ -158,7 +158,7 @@ function init() {
                         desiredSize: new go.Size(12, 12),
                         filter: 'grayscale(100%)',
                         source:'images/dots.png',
-                        margin: new go.Margin(3, 5, 5, 3),
+                        margin: new go.Margin(0, 5, 5, 0),
                         filter: 'grayscale(100%)',
                         click:(e, obj) => {
                             console.log(obj)
@@ -182,7 +182,7 @@ function init() {
                         cursor: 'pointer',
                         fromEndSegmentLength: 40,
                         fill: '#ffffff',
-                        stroke: "#ccc",
+                        stroke: "#7e8186",
                         strokeWidth: 2,
                         parameter1: 15,   // Rounded corners
                         desiredSize: new go.Size(90, 80),  // Size of the rectangle,
