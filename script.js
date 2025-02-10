@@ -260,33 +260,34 @@ function init() {
             selectable: true,
             mouseEnter: (e, obj) => {
                 changeProperty(obj, 'LINK_MENU_SECTION', 'visible', true);
-                // const shape = obj.findObject('IMG_BOX');
-                // const image = obj.findObject('INSIDE_SHAPE');
-                // if(shape && image){
-                //     shape.stroke = '#e74266';
-                //     image.filter = 'grayscale(0%)'
-                // }
+                const shape = obj.findObject('LINK_LINE');
+                const toArrowTip = obj.findObject('AH');
+                if(shape && toArrowTip){
+                    shape.stroke = '#e74266';
+                    toArrowTip.fill = '#e74266';
+                    toArrowTip.stroke = '#e74266';
+                    
+                }
             },
             mouseLeave: (e, obj) => {
                 changeProperty(obj, 'LINK_MENU_SECTION', 'visible', false)
-                // const shape = obj.findObject('IMG_BOX');
-                // const image = obj.findObject('INSIDE_SHAPE');
-                // if(shape && image){
-                //     shape.stroke = '#7e8186';
-                //     image.filter = 'grayscale(100%)'
-                // }
+                const shape = obj.findObject('LINK_LINE');
+                const toArrowTip = obj.findObject('AH');
+                if(shape && toArrowTip){
+                    shape.stroke = '#002f49';
+                    toArrowTip.fill = '#002f49';
+                    toArrowTip.stroke = '#002f49';
+                }
                 // shape.stroke = '#7e8186';
             },
         },
-        $(go.Shape, { isPanelMain: true, strokeWidth: 20, stroke: "transparent" },
-            new go.Binding("stroke", "isHighlighted", h => h ? "red" : "transparent").ofObject()
-        ),
-        $(go.Shape, { isPanelMain: true, stroke: "#002f49", strokeWidth: 2, toLinkable: true, toLinkableSelfNode: true }), // the main path
+        $(go.Shape, { isPanelMain: true, strokeWidth: 20, stroke: "transparent" }),
+        $(go.Shape, { name:'LINK_LINE', isPanelMain: true, stroke: "#002f49", strokeWidth: 2, toLinkable: true, toLinkableSelfNode: true }), // the main path
         $(go.Shape, { name: "AH", toArrow: "RoundedTriangle", scale: 1.2, fill: "#002f49", stroke: "#002f49", toLinkable: true, toLinkableSelfNode: true }),  // the arrowhead
 
         $(go.Panel, "Horizontal",
             {margin: new go.Margin(-20, 20, -20, 20), name:'LINK_MENU_SECTION', visible: false},
-            $(go.Panel, 'Spot', { margin:3}, 
+            $(go.Panel, 'Spot', { margin:3, cursor: 'pointer'}, 
                 {
                     mouseEnter: (e, obj) => {
                         const shape = obj.findObject('IMG_BOX');
@@ -317,13 +318,12 @@ function init() {
                         filter: 'grayscale(100%)',
                         margin: 2,
                         filter: 'grayscale(100%)',
-                        cursor: 'pointer',
                         imageStretch: go.ImageStretch.Uniform,
                         // stroke:'#e74266',
                     }),
                 )
             ),
-            $(go.Panel, 'Spot',  { margin:3}, 
+            $(go.Panel, 'Spot',  { margin:3, cursor: 'pointer'}, 
                 {
                     mouseEnter: (e, obj) => {
                         const shape = obj.findObject('IMG_BOX');
@@ -354,7 +354,6 @@ function init() {
                         filter: 'grayscale(100%)',
                         margin: 2,
                         filter: 'grayscale(100%)',
-                        cursor: 'pointer',
                         imageStretch: go.ImageStretch.Uniform,
                         // stroke:'#e74266',
                     }),
