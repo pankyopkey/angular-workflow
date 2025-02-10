@@ -11,26 +11,10 @@ let nodeDataArray = [
 
 ]
 let linkDataArray = [
-    { "from": -1, "to": 0 },
-    { "from": -2, "to": 0 },
-    { "from": -2, "to": 3 },
-    { "from": -3, "to": 3 },
-    { "from": 0, "to": 1 },
     { "from": 1, "to": 2 },
-    { "from": 1, "to": 3 },
-    { "from": 0, "to": 5 },
-    { "from": 5, "to": 3 },
-    { "from": 3, "to": 2 },
-
-
-    { "from": 3, "to": 6 },
-
-    { "from": 2, "to": 100 },
-    { "from": 6, "to": 101 },
-
-    { "from": 0, "to": 200 },
-    { "from": 3, "to": 201 },
-    { "from": 2, "to": 202 }
+    { "from": 2, "to": 3 },
+    { "from": 3, "to": 4 },
+    { "from": 3, "to": 5 },
 ]
 
 
@@ -81,18 +65,18 @@ function init() {
     function onSelectionChanged(node) {
         const shape = node.findObject('SHAPE');
         console.log(shape)
-        if (node.isSelected) {
-            if (shape) {
-                shape.strokeWidth = 10;
-            }
-        }
+        // if (node.isSelected) {
+        //     if (shape) {
+        //         shape.strokeWidth = 10;
+        //     }
+        // }
 
-        else {
-            if (shape) {
-                // shape.fill = "#ffffff";
-                shape.strokeWidth = 2;
-            }
-        }
+        // else {
+        //     if (shape) {
+        //         // shape.fill = "#ffffff";
+        //         shape.strokeWidth = 2;
+        //     }
+        // }
 
     }
 
