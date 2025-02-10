@@ -97,6 +97,7 @@ function init() {
         shadowColor: blueShadow,
         cursor: 'pointer',
         contextMenu : myContextMenu,
+        selectionAdorned:false,
         shadowOffset: new go.Point(4, 6),
         mouseEnter: (e, obj) => {
             changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
@@ -112,8 +113,8 @@ function init() {
         $(go.Shape, { strokeWidth: 0, fill: "transparent" }),
         $(go.Panel, "Vertical", {},
 
-            $(go.Panel, "Auto", { height: 30, },
-                $(go.Panel, "Horizontal", { name: "MENU_SECTION", visible: false, },
+            $(go.Panel, "Auto", { height: 30, defaultStretch: go.Stretch.Horizontal,alignment: go.Spot.TopCenter,alignmentFocus: go.Spot.BottomLeft,},
+                $(go.Panel, "Horizontal", { name: "MENU_SECTION", visible: false,defaultStretch: go.Stretch.Horizontal, alignment: go.Spot.TopRight,alignmentFocus: go.Spot.BottomLeft, },
                     $(go.Picture, {
                         name: 'INSIDE_SHAPE',
                         desiredSize: new go.Size(12, 12),
@@ -257,7 +258,7 @@ function init() {
             toSpot: go.Spot.AllSides
         },
         { 
-            selectable: true,
+            selectable: false,
             mouseEnter: (e, obj) => {
                 changeProperty(obj, 'LINK_MENU_SECTION', 'visible', true);
                 const shape = obj.findObject('LINK_LINE');
