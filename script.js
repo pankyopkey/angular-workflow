@@ -116,7 +116,7 @@ function init() {
     },
         // Main Vertical panel for layout
         $(go.Panel, "Vertical",{
-             minSize:300
+            
         },
 
             $(go.Panel, "Horizontal", {
