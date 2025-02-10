@@ -275,16 +275,16 @@ function init() {
                 const shape = obj.findObject('LINK_LINE');
                 const toArrowTip = obj.findObject('AH');
                 if(shape && toArrowTip){
-                    shape.stroke = '#002f49';
-                    toArrowTip.fill = '#002f49';
-                    toArrowTip.stroke = '#002f49';
+                    shape.stroke = '#7e8186';
+                    toArrowTip.fill = '#7e8186';
+                    toArrowTip.stroke = '#7e8186';
                 }
                 // shape.stroke = '#7e8186';
             },
         },
         $(go.Shape, { isPanelMain: true, strokeWidth: 20, stroke: "transparent" }),
-        $(go.Shape, { name:'LINK_LINE', isPanelMain: true, stroke: "#002f49", strokeWidth: 2, toLinkable: true, toLinkableSelfNode: true }), // the main path
-        $(go.Shape, { name: "AH", toArrow: "RoundedTriangle", scale: 1.2, fill: "#002f49", stroke: "#002f49", toLinkable: true, toLinkableSelfNode: true }),  // the arrowhead
+        $(go.Shape, { name:'LINK_LINE', isPanelMain: true, stroke: "#7e8186", strokeWidth: 2, toLinkable: true, toLinkableSelfNode: true }), // the main path
+        $(go.Shape, { name: "AH", toArrow: "RoundedTriangle", scale: 1.2, fill: "#7e8186", stroke: "#7e8186", toLinkable: true, toLinkableSelfNode: true }),  // the arrowhead
 
         $(go.Panel, "Horizontal",
             {margin: new go.Margin(-20, 20, -20, 20), name:'LINK_MENU_SECTION', visible: false},
