@@ -69,7 +69,7 @@ function init() {
         // "contentAlignment": go.Spot.Center,
         // "initialContentAlignment": go.Spot.TopLeft,
         "animationManager.isEnabled": true,
-        "draggingTool.isEnabled": false,
+        // "draggingTool.isEnabled": false,
     });
 
     function onSelectionChanged(node) {
