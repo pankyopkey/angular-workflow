@@ -47,10 +47,14 @@ function init() {
 
     myDiagram = new go.Diagram('myDiagramDiv', {
         // have mouse wheel events zoom in and out instead of scroll up and down
-        'toolManager.mouseWheelBehavior': go.WheelMode.Zoom,
+        //'toolManager.mouseWheelBehavior': go.WheelMode.Zoom,
         //"clickCreatingTool.archetypeNodeData": { text: "Node", color: "lightgray" },
         //initialAutoScale: go.AutoScale.UniformToFill,
         'linkingTool.direction': go.LinkingDirection.AllSides,
+        allowDrop: true,
+        "undoManager.isEnabled": true,
+        "linkingTool.portGravity": 60,
+        "relinkingTool.portGravity": 60,
         grid: $(go.Panel, "Grid", { gridCellSize: new go.Size(20, 20) }, $(go.Shape, "LineH", { strokeDashArray: [1, 20], stroke: '#7e8186' })),
         layout: new go.LayeredDigraphLayout({
             isInitial: true,
@@ -476,9 +480,15 @@ function init() {
     )
 
 
-    myDiagram.model.nodeDataArray = nodeDataArray;
 
-    myDiagram.model.linkDataArray = linkDataArray;
+
+    const dataModel ={
+        "class": "GraphLinksModel",
+        "nodeDataArray":nodeDataArray,
+        "linkDataArray":linkDataArray
+    }
+
+    myDiagram.model = go.Model.fromJson(dataModel);
 
     function showContextMenu(obj, diagram, tool) {
         // Show only the relevant buttons given the current state.
