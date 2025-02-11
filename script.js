@@ -50,7 +50,6 @@ function init() {
         //'toolManager.mouseWheelBehavior': go.WheelMode.Zoom,
         //"clickCreatingTool.archetypeNodeData": { text: "Node", color: "lightgray" },
         //initialAutoScale: go.AutoScale.UniformToFill,
-        //'linkingTool.direction': go.LinkingDirection.AllSides,
         allowDrop: true,
         // 'linkingTool.toLinkable':true,
         // 'linkingTool.fromLinkable':true,
