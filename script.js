@@ -3,12 +3,12 @@ var isDarkMode = false; // is accessed by html elements (button) so must be decl
 
 let nodeDataArray = [
     // { "key": 1, "category": "firstNode", "text": "Add First Step.." },
-    { "key": 1, "figure": "RoundedLeftRectangle", "text": "When clicking ‘Test workflow’", source: 'images/ai.png', type: '' },
+    { "key": 1, "figure": "RoundedLeftRectangle", "text": "When clicking ‘Test workflow’", source: 'images/ai.png', type: 'RoundedLeftRectangle' },
     { "key": 2, "figure": "RoundedRectangle", "text": "When chat message received", source: 'images/uparrow.png', type: '' },
-    { "key": 4, "figure": "RoundedSquare", "text": "Basic LLM Chain", source: 'images/code.png', type: '' },
-    { "key": 3, "figure": "Circle", "text": "Code", source: 'images/ai.png', type: '' },
+    { "key": 4, "figure": "Square", "text": "Basic LLM Chain", source: 'images/code.png', type: 'Square' },
+    { "key": 3, "figure": "Circle", "text": "Code", source: 'images/ai.png', type: 'Circle' },
     { "key": 5, "figure": "RoundedRectangle", "text": "Azure OpenAI Chat Model", source: 'images/ai.png', type: '' },
-    { "key": 6, "figure": "RoundedRectangle", "text": "Block chain", source: 'images/ai.png', type: 'ChainProcess' }
+    { "key": 6, "figure": "RoundedRectangle", "text": "Block chain", source: 'images/ai.png', type: 'RoundedRectangle' }
 
 ]
 let linkDataArray = [
@@ -191,9 +191,26 @@ function init() {
             ),
             // First panel: This is used to create RoundedLeftRectangle shape
             $(go.Panel, "Auto",
-                $(go.Shape, { name: 'Palceholder', strokeWidth: 0, fill: "transparent", parameter1: 20 }).bind('figure'),
+                $(go.Shape,
+                    { name: 'Palceholder', strokeWidth: 0, fill: "transparent", parameter1: 20 },
+                    new go.Binding("figure"),
+                    new go.Binding("parameter1", "figure", v => {
+                        if (v == 'RoundedRectangle') {
+                            return 8;
+                        }
+                        else if (v == 'RoundedLeftRectangle') {
+                            return 15;
+                        }
+                        else if (v == 'Circle') {
+                            return 0;
+                        } else {
+                            return 8
+                        }
+                    }),
+
+                ),
                 $(go.Panel, "Auto",
-                    new go.Shape({
+                    $( go.Shape,{
                         name: 'SHAPE_FIGURE',
                         portId: '',
                         cursor: 'pointer',
@@ -210,10 +227,36 @@ function init() {
                         // toLinkable: true,
                         // toLinkableSelfNode: true,
                         // toLinkableDuplicates: true,
-                    }
-                    ).bind('figure')
-                        .bind("desiredSize", "type", v => v == 'ChainProcess' ? new go.Size(200, 80) : new go.Size(90, 80))
-                        .bind("parameter1", "figure", v => v == 'RoundedRectangle' ? 6 : 15),
+                    },
+                        new go.Binding("figure"),
+                        new go.Binding("parameter1", "figure", v => {
+                            if (v == 'RoundedRectangle') {
+                                return 8;
+                            }
+                            else if (v == 'RoundedLeftRectangle') {
+                                return 15;
+                            }
+                            else if (v == 'Circle') {
+                                return 0;
+                            } else {
+                                return 8
+                            }
+                        }),
+                        new go.Binding("desiredSize", "type", v => {
+                            
+                            if (v == 'RoundedRectangle') {
+                                return new go.Size(200, 80);
+                            }
+                            else if (v == 'RoundedLeftRectangle') {
+                                return new go.Size(90, 80);
+                            }
+                            else if (v == 'Circle' || v == "Square") {
+                                return new go.Size(90, 90);
+                            } else {
+                                return new go.Size(90, 80)
+                            }
+                        }),
+                    ),
 
                     // Second panel: It is used to add shape inside shape
                     $(go.Panel, 'Horizontal',
@@ -222,7 +265,7 @@ function init() {
                             desiredSize: new go.Size(40, 40)
                         },
                             new go.Binding("source"),
-                            new go.Binding("desiredSize", "type", v => v == 'ChainProcess' ? new go.Size(30, 30) : new go.Size(40, 40)),
+                            new go.Binding("desiredSize", "type", v => v == 'RoundedRectangle' ? new go.Size(30, 30) : new go.Size(40, 40)),
 
                         ),
                         new go.TextBlock('', {  // Empty string as placeholder for 'text' binding
@@ -236,7 +279,7 @@ function init() {
                             margin: 5,
                             name: 'TEXTBLOCK_NAME',
                         }).bindTwoWay('text')
-                            .bind("visible", "type", v => v == 'ChainProcess')
+                            .bind("visible", "type", v => v == 'RoundedRectangle')
                     )
 
                 )
@@ -256,7 +299,7 @@ function init() {
                     margin: 5,
                     name: 'TEXTBLOCK_NAME',
                 }).bindTwoWay('text')  // Bind text dynamically
-                    .bind("visible", "type", v => v != 'ChainProcess')
+                    .bind("visible", "type", v => v != 'RoundedRectangle')
             )
         ),
         new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
