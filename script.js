@@ -113,7 +113,9 @@ function init() {
         name: 'NodeDiagram',
         mouseEnter: (e, obj) => {
             changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
-            changeProperty(obj, 'MENU_SECTION', 'visible', true);
+            if(obj.data.type !='PlusLine'){
+                changeProperty(obj, 'MENU_SECTION', 'visible', true);
+            }
             showSmallPorts(obj, true)
         },
         mouseLeave: (e, obj) => {
@@ -197,6 +199,7 @@ function init() {
                             obj.filter = 'grayscale(100%)'
                         },
                     }),
+                    
                 )
             ),
             // First panel: This is used to create RoundedLeftRectangle shape
@@ -441,6 +444,7 @@ function init() {
                     click: (e, obj) => {
 
                         addNewNode(obj.part.fromNode, myDiagram, 'RoundedLeftRectangle')
+                        
                     },
                 },
                 new go.Shape("RoundedRectangle", { name: 'IMG_BOX', width: 20, height: 20, strokeWidth: 1, fill: '#fff', stroke: "#7e8186" }),
@@ -596,6 +600,7 @@ function makePort(name, spot, output, input) {
                 $(go.TextBlock, { stroke: '#ffffff', margin: 6, maxSize: new go.Size(400, NaN), text: 'Drag sequence flow to connect task.' })
             ),
         },
+        new go.Binding("visible", "type", v => v != 'PlusLine'),
     );
 }
 function showSmallPorts(node, show) {
