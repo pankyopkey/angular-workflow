@@ -94,25 +94,25 @@ function init() {
 
     // define the Node template
     myDiagram.nodeTemplate = $(go.Node, 'Auto', {
-            isShadowed: false,
-            shadowBlur: 0,
-            shadowColor: blueShadow,
-            cursor: 'pointer',
-            contextMenu: myContextMenu,
-            selectionAdorned: false,
-            shadowOffset: new go.Point(4, 6),
-            locationSpot:go.Spot.Center, 
-            locationObjectName: "SHAPE_FIGURE",
-            mouseEnter: (e, obj) => {
-                changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
-                changeProperty(obj, 'MENU_SECTION', 'visible', true)
-            },
-            mouseLeave: (e, obj) => {
-                changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
-                changeProperty(obj, 'MENU_SECTION', 'visible', false)
-            },
-            selectionChanged: onSelectionChanged
+        isShadowed: false,
+        shadowBlur: 0,
+        shadowColor: blueShadow,
+        cursor: 'pointer',
+        contextMenu: myContextMenu,
+        selectionAdorned: false,
+        shadowOffset: new go.Point(4, 6),
+        locationSpot: go.Spot.Center,
+        locationObjectName: "SHAPE_FIGURE",
+        mouseEnter: (e, obj) => {
+            changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
+            changeProperty(obj, 'MENU_SECTION', 'visible', true)
         },
+        mouseLeave: (e, obj) => {
+            changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
+            changeProperty(obj, 'MENU_SECTION', 'visible', false)
+        },
+        selectionChanged: onSelectionChanged
+    },
         // Main Vertical panel for layout
         $(go.Shape, { strokeWidth: 0, fill: "transparent" }),
         $(go.Panel, "Vertical", {},
@@ -192,14 +192,14 @@ function init() {
             // First panel: This is used to create RoundedLeftRectangle shape
             $(go.Panel, "Auto",
                 $(go.Shape,
-                    { name: 'Palceholder', strokeWidth: 0, fill: "transparent", parameter1: 20 },
+                    { name: 'Palceholder', strokeWidth: 0, fill: "transparent", },
                     new go.Binding("figure"),
                     new go.Binding("parameter1", "figure", v => {
                         if (v == 'RoundedRectangle') {
                             return 8;
                         }
                         else if (v == 'RoundedLeftRectangle') {
-                            return 15;
+                            return 10;
                         }
                         else if (v == 'Circle') {
                             return 0;
@@ -207,10 +207,28 @@ function init() {
                             return 8
                         }
                     }),
+                    new go.Binding("desiredSize", "type", v => {
+
+                        if (v == 'RoundedRectangle') {
+                            return new go.Size(220, 100);
+                        }
+                        else if (v == 'RoundedLeftRectangle') {
+                            return new go.Size(110, 100);
+                        }
+                        else if (v == 'Circle' ) {
+                            return new go.Size(135, 135);
+                        } 
+                        else if (v == "Square" ) {
+                            return new go.Size(110, 110);
+                        } 
+                        else {
+                            return new go.Size(110, 100)
+                        }
+                    }),
 
                 ),
                 $(go.Panel, "Auto",
-                    $( go.Shape,{
+                    $(go.Shape, {
                         name: 'SHAPE_FIGURE',
                         portId: '',
                         cursor: 'pointer',
@@ -243,7 +261,7 @@ function init() {
                             }
                         }),
                         new go.Binding("desiredSize", "type", v => {
-                            
+
                             if (v == 'RoundedRectangle') {
                                 return new go.Size(200, 80);
                             }
