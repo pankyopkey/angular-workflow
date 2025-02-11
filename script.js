@@ -52,11 +52,11 @@ function init() {
         //initialAutoScale: go.AutoScale.UniformToFill,
         'linkingTool.direction': go.LinkingDirection.AllSides,
         grid: $(go.Panel, "Grid", { gridCellSize: new go.Size(20, 20) }, $(go.Shape, "LineH", { strokeDashArray: [1, 20], stroke: '#7e8186' })),
-        // layout: new go.LayeredDigraphLayout({
-        //     isInitial: true,
-        //     isOngoing: false,
-        //     layerSpacing: 100
-        // }),
+        layout: new go.LayeredDigraphLayout({
+            isInitial: true,
+            isOngoing: false,
+            layerSpacing: 100
+        }),
         'undoManager.isEnabled': true,
         "Modified": onModified,
         // "contentAlignment": go.Spot.Center,
@@ -94,28 +94,6 @@ function init() {
 
     // define the Node template
     myDiagram.nodeTemplate = $(go.Node, 'Auto', {
-<<<<<<< HEAD
-            isShadowed: false,
-            shadowBlur: 0,
-            shadowColor: blueShadow,
-            cursor: 'pointer',
-            contextMenu: myContextMenu,
-            selectionAdorned: false,
-            shadowOffset: new go.Point(4, 6),
-            locationSpot:go.Spot.Center, 
-            locationObjectName: "SHAPE_FIGURE",
-            mouseEnter: (e, obj) => {
-                changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
-                changeProperty(obj, 'MENU_SECTION', 'visible', true);
-                showSmallPorts(obj, true)
-            },
-            mouseLeave: (e, obj) => {
-                changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
-                changeProperty(obj, 'MENU_SECTION', 'visible', false);
-                showSmallPorts(obj, false)
-            },
-            selectionChanged: onSelectionChanged
-=======
         isShadowed: false,
         shadowBlur: 0,
         shadowColor: blueShadow,
@@ -127,12 +105,13 @@ function init() {
         locationObjectName: "SHAPE_FIGURE",
         mouseEnter: (e, obj) => {
             changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
-            changeProperty(obj, 'MENU_SECTION', 'visible', true)
->>>>>>> e0b32c3b5cc7d096234f268c670044dce6c06825
+            changeProperty(obj, 'MENU_SECTION', 'visible', true);
+            showSmallPorts(obj, true)
         },
         mouseLeave: (e, obj) => {
             changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
-            changeProperty(obj, 'MENU_SECTION', 'visible', false)
+            changeProperty(obj, 'MENU_SECTION', 'visible', false);
+            showSmallPorts(obj, false)
         },
         selectionChanged: onSelectionChanged
     },
