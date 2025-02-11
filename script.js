@@ -508,7 +508,7 @@ function init() {
 
                             myDiagram.model.removeLinkData(obj.part.data);
                             let node = myDiagram.findNodeForKey(obj.part.data.from);
-                            if(node){
+                            if(node && node.findLinksOutOf().count == 0){
                                 addNewNode(node,myDiagram,'PlusLine')
                             }
                            
