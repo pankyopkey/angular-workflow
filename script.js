@@ -48,15 +48,15 @@ function init() {
     myDiagram = new go.Diagram('myDiagramDiv', {
         // have mouse wheel events zoom in and out instead of scroll up and down
         'toolManager.mouseWheelBehavior': go.WheelMode.Zoom,
-        "clickCreatingTool.archetypeNodeData": { text: "Node", color: "lightgray" },
+        //"clickCreatingTool.archetypeNodeData": { text: "Node", color: "lightgray" },
         //initialAutoScale: go.AutoScale.UniformToFill,
         'linkingTool.direction': go.LinkingDirection.AllSides,
         grid: $(go.Panel, "Grid", { gridCellSize: new go.Size(20, 20) }, $(go.Shape, "LineH", { strokeDashArray: [1, 20], stroke: '#7e8186' })),
-        layout: new go.LayeredDigraphLayout({
-            isInitial: true,
-            isOngoing: false,
-            layerSpacing: 100
-        }),
+        // layout: new go.LayeredDigraphLayout({
+        //     isInitial: true,
+        //     isOngoing: false,
+        //     layerSpacing: 100
+        // }),
         'undoManager.isEnabled': true,
         "Modified": onModified,
         // "contentAlignment": go.Spot.Center,
@@ -69,7 +69,7 @@ function init() {
         console.log(shape)
         if (node.isSelected) {
             if (shape) {
-                shape.fill = '#2941701a';
+                shape.fill = '#e6e9ed';
             }
         }
 
@@ -105,11 +105,13 @@ function init() {
             locationObjectName: "SHAPE_FIGURE",
             mouseEnter: (e, obj) => {
                 changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
-                changeProperty(obj, 'MENU_SECTION', 'visible', true)
+                changeProperty(obj, 'MENU_SECTION', 'visible', true);
+                showSmallPorts(obj, true)
             },
             mouseLeave: (e, obj) => {
                 changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
-                changeProperty(obj, 'MENU_SECTION', 'visible', false)
+                changeProperty(obj, 'MENU_SECTION', 'visible', false);
+                showSmallPorts(obj, false)
             },
             selectionChanged: onSelectionChanged
         },
@@ -196,13 +198,13 @@ function init() {
                     new go.Binding("figure"),
                     new go.Binding("parameter1", "figure", v => {
                         if (v == 'RoundedRectangle') {
-                            return 8;
+                            return 15;
                         }
                         else if (v == 'RoundedLeftRectangle') {
                             return 15;
                         }
                         else if (v == 'Circle') {
-                            return 0;
+                            return 8;
                         } else {
                             return 8
                         }
@@ -250,9 +252,11 @@ function init() {
                             else if (v == 'RoundedLeftRectangle') {
                                 return new go.Size(90, 80);
                             }
-                            else if (v == 'Circle' || v == "Square") {
+                            else if (v == 'Circle') {
+                                return new go.Size(80, 80);
+                            } else if (v == "Square") {
                                 return new go.Size(90, 90);
-                            } else {
+                            }else {
                                 return new go.Size(90, 80)
                             }
                         }),
@@ -280,8 +284,19 @@ function init() {
                             name: 'TEXTBLOCK_NAME',
                         }).bindTwoWay('text')
                             .bind("visible", "type", v => v == 'RoundedRectangle')
-                    )
-
+                    ),
+                    {
+                        toolTip: $(
+                            go.Adornment,
+                            "Auto",
+                            $(go.Shape, { fill: "#000000" }),
+                            $(go.TextBlock, { stroke: '#ffffff', margin: 6, maxSize: new go.Size(400, NaN) }, new go.Binding("text", "text"))
+                        ),
+                    },
+                    makePort("T", go.Spot.Top, true, true),
+                    makePort("B", go.Spot.Bottom, true, true),
+                    makePort("R", go.Spot.Right, true, true),
+                    makePort("L", go.Spot.Left, true, true),
                 )
 
             ),
@@ -302,6 +317,10 @@ function init() {
                     .bind("visible", "type", v => v != 'RoundedRectangle')
             )
         ),
+        // { // handle mouse enter/leave events to show/hide the ports
+        //     mouseEnter: (e, node) => showSmallPorts(node, true),
+        //     mouseLeave: (e, node) => showSmallPorts(node, false)
+        // },
         new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
     )
 
@@ -489,6 +508,39 @@ function textStyle() {
         font: bigfont
     };
 }
+
+function makePort(name, spot, output, input) {
+    const $ = go.GraphObject.make;
+    return $(go.Shape, "Circle",
+      {
+
+        fill: null,  // not seen, by default; set to a translucent gray by showSmallPorts, defined below
+        stroke: null,
+        desiredSize: new go.Size(11, 11),
+        alignment: spot,  // align the port on the main Shape
+        alignmentFocus: spot,  // just inside the Shape
+        portId: name,  // declare this object to be a "port"
+        fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
+        fromLinkable: output, toLinkable: input,  // declare whether the user may draw links to/from here
+        cursor: "pointer"
+      },
+      {
+        toolTip: $(
+          go.Adornment,
+          "Auto",
+          $(go.Shape, { fill: "#000000" }),
+          $(go.TextBlock, { stroke: '#ffffff', margin: 6, maxSize: new go.Size(400, NaN), text: 'Drag sequence flow to connect task.' })
+        ),
+      },
+    );
+}
+function showSmallPorts(node, show) {
+    node.ports.each(port => {
+      if (port.portId !== "") {  // don't change the default port, which is the big shape
+        port.fill = show ? "rgba(0,0,0,.3)" : null;
+      }
+    });
+  }
 
 function hideCX() {
     if (myDiagram.currentTool instanceof go.ContextMenuTool) {
