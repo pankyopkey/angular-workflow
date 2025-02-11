@@ -57,10 +57,11 @@ function init() {
         "linkingTool.portGravity": 60,
         "relinkingTool.portGravity": 60,
         grid: $(go.Panel, "Grid", { gridCellSize: new go.Size(20, 20) }, $(go.Shape, "LineH", { strokeDashArray: [1, 20], stroke: '#7e8186' })),
+        // layout: new go.LayeredDigraphLayout(),
         layout: new go.LayeredDigraphLayout({
             isInitial: true,
             isOngoing: false,
-            isRealtime: true,
+            isRealtime: false,
             layerSpacing: 100
         }),
         'undoManager.isEnabled': true,
@@ -618,6 +619,7 @@ function hideCX() {
 }
 selectedNode = null;
 function addNewNode(selectedNode, myDiagram, type) {
+    
     let pos = selectedNode.location;
 
     let newPos = new go.Point(pos.x + 200, pos.y);
@@ -650,5 +652,11 @@ function addNewNode(selectedNode, myDiagram, type) {
     }
 
     myDiagram.layoutDiagram(true);
+    let node = this.myDiagram.findNodeForKey(newNodeData.key);
+
+    if (node && type !='PlusLine') {
+      this.myDiagram.select(node);  // Select the found node
+
+    }
 
 }
