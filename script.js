@@ -60,7 +60,7 @@ function init() {
         layout: new go.LayeredDigraphLayout({
             isInitial: true,
             isOngoing: false,
-            isRealtime:true,
+            isRealtime: true,
             layerSpacing: 100
         }),
         'undoManager.isEnabled': true,
@@ -231,6 +231,9 @@ function init() {
                         else if (v == "Square") {
                             return new go.Size(110, 110);
                         }
+                        else if (v == "PlusLine") {
+                            return new go.Size(40, 40);
+                        }
                         else {
                             return new go.Size(110, 100)
                         }
@@ -238,10 +241,10 @@ function init() {
 
                 ),
                 $(go.Panel, "Spot",
-                {
-                    fromLinkable:true,
-                    toLinkable:true,
-                },
+                    {
+                        fromLinkable: true,
+                        toLinkable: true,
+                    },
                     $(go.Shape, {
                         name: 'SHAPE_FIGURE',
                         portId: '',
@@ -270,7 +273,7 @@ function init() {
                             else if (v == 'RoundedLeftRectangle') {
                                 return 15;
                             }
-                            else if (v == 'Circle') {
+                            else if (v == 'Circle' || v == 'PlusLine') {
                                 return 0;
                             } else {
                                 return 8
@@ -286,9 +289,14 @@ function init() {
                             }
                             else if (v == 'Circle') {
                                 return new go.Size(80, 80);
-                            } else if (v == "Square") {
+                            } 
+                            else if (v == "Square") {
                                 return new go.Size(90, 90);
-                            } else {
+                            }
+                            else if (v == "PlusLine") {
+                                return new go.Size(30, 30);
+                            }
+                             else {
                                 return new go.Size(90, 80)
                             }
                         }),
@@ -307,6 +315,7 @@ function init() {
                         },
                             new go.Binding("source"),
                             new go.Binding("desiredSize", "type", v => v == 'RoundedRectangle' ? new go.Size(30, 30) : new go.Size(40, 40)),
+                            new go.Binding("visible", "type", v => v != 'PlusLine'),
 
                         ),
                         new go.TextBlock('', {  // Empty string as placeholder for 'text' binding
@@ -351,7 +360,7 @@ function init() {
                     margin: 5,
                     name: 'TEXTBLOCK_NAME',
                 }).bindTwoWay('text')  // Bind text dynamically
-                    .bind("visible", "type", v => v != 'RoundedRectangle')
+                    .bind("visible", "type", v => v != 'RoundedRectangle' && v!= 'PlusLine')
             )
         ),
         // { // handle mouse enter/leave events to show/hide the ports
@@ -364,7 +373,7 @@ function init() {
 
 
 
-   myDiagram.linkTemplate = $(go.Link,
+    myDiagram.linkTemplate = $(go.Link,
 
         {
             routing: go.Link.AvoidsNodes,
@@ -431,7 +440,7 @@ function init() {
                     },
                     click: (e, obj) => {
 
-                        addNewNode(obj.part.fromNode, myDiagram)
+                        addNewNode(obj.part.fromNode, myDiagram, 'RoundedLeftRectangle')
                     },
                 },
                 new go.Shape("RoundedRectangle", { name: 'IMG_BOX', width: 20, height: 20, strokeWidth: 1, fill: '#fff', stroke: "#7e8186" }),
@@ -494,6 +503,18 @@ function init() {
 
     )
 
+
+    myDiagram.addModelChangedListener((e) => {
+        if (e.isTransactionFinished) {
+
+            myDiagram.nodes.each((node) => {
+                if (node.findLinksOutOf().count == 0 && node.data.type != 'PlusLine') {
+                    addNewNode(node, myDiagram, 'PlusLine')
+                }
+            });
+        }
+    }
+    )
 
 
 
@@ -591,16 +612,14 @@ function hideCX() {
     }
 }
 selectedNode = null;
-function addNewNode(selectedNode, myDiagram) {
-
-    let newNodeData = { "key": myDiagram.model.nodeDataArray.length + 1, "figure": "RoundedRectangle", "text": "new node", source: 'images/ai.png', loc: '0 0', type: 'RoundedRectangle' }
-    myDiagram.model.addNodeData(newNodeData);
-
+function addNewNode(selectedNode, myDiagram, type) {
     let pos = selectedNode.location;
 
     let newPos = new go.Point(pos.x + 200, pos.y);
+    let newNodeData = { "key": myDiagram.model.nodeDataArray.length + 1, "figure": type, "text": "new node", source: 'images/ai.png', loc: '0 0', type: type,'loc':newPos.toString() }
+    myDiagram.model.addNodeData(newNodeData);
 
-    myDiagram.model.setDataProperty(newNodeData, 'loc', newPos.toString());
+
 
 
     let linkData1 = {
