@@ -50,8 +50,10 @@ function init() {
         //'toolManager.mouseWheelBehavior': go.WheelMode.Zoom,
         //"clickCreatingTool.archetypeNodeData": { text: "Node", color: "lightgray" },
         //initialAutoScale: go.AutoScale.UniformToFill,
-        'linkingTool.direction': go.LinkingDirection.AllSides,
+        //'linkingTool.direction': go.LinkingDirection.AllSides,
         allowDrop: true,
+        // 'linkingTool.toLinkable':true,
+        // 'linkingTool.fromLinkable':true,
         "undoManager.isEnabled": true,
         "linkingTool.portGravity": 60,
         "relinkingTool.portGravity": 60,
@@ -59,6 +61,7 @@ function init() {
         layout: new go.LayeredDigraphLayout({
             isInitial: true,
             isOngoing: false,
+            isRealtime:true,
             layerSpacing: 100
         }),
         'undoManager.isEnabled': true,
@@ -66,6 +69,7 @@ function init() {
         // "contentAlignment": go.Spot.Center,
         // "initialContentAlignment": go.Spot.TopLeft,
         "animationManager.isEnabled": true,
+        "draggingTool.isEnabled": false,
     });
 
     function onSelectionChanged(node) {
@@ -98,28 +102,28 @@ function init() {
 
     // define the Node template
     myDiagram.nodeTemplate = $(go.Node, 'Auto', {
-            isShadowed: false,
-            shadowBlur: 0,
-            shadowColor: blueShadow,
-            cursor: 'pointer',
-            contextMenu: myContextMenu,
-            selectionAdorned: false,
-            shadowOffset: new go.Point(4, 6),
-            locationSpot: go.Spot.Center,
-            locationObjectName: "SHAPE_FIGURE",
-            name:'NodeDiagram',
-            mouseEnter: (e, obj) => {
-                changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
-                changeProperty(obj, 'MENU_SECTION', 'visible', true);
-                showSmallPorts(obj, true)
-            },
-            mouseLeave: (e, obj) => {
-                changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
-                changeProperty(obj, 'MENU_SECTION', 'visible', false);
-                showSmallPorts(obj, false)
-            },
-            selectionChanged: onSelectionChanged
+        isShadowed: false,
+        shadowBlur: 0,
+        shadowColor: blueShadow,
+        cursor: 'pointer',
+        contextMenu: myContextMenu,
+        selectionAdorned: false,
+        shadowOffset: new go.Point(4, 6),
+        locationSpot: go.Spot.Center,
+        locationObjectName: "SHAPE_FIGURE",
+        name: 'NodeDiagram',
+        mouseEnter: (e, obj) => {
+            changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
+            changeProperty(obj, 'MENU_SECTION', 'visible', true);
+            showSmallPorts(obj, true)
         },
+        mouseLeave: (e, obj) => {
+            changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
+            changeProperty(obj, 'MENU_SECTION', 'visible', false);
+            showSmallPorts(obj, false)
+        },
+        selectionChanged: onSelectionChanged
+    },
         // Main Vertical panel for layout
         $(go.Shape, { strokeWidth: 0, fill: "transparent" }),
         $(go.Panel, "Vertical", {},
@@ -222,36 +226,42 @@ function init() {
                         else if (v == 'RoundedLeftRectangle') {
                             return new go.Size(110, 100);
                         }
-                        else if (v == 'Circle' ) {
+                        else if (v == 'Circle') {
                             return new go.Size(135, 135);
-                        } 
-                        else if (v == "Square" ) {
+                        }
+                        else if (v == "Square") {
                             return new go.Size(110, 110);
-                        } 
+                        }
                         else {
                             return new go.Size(110, 100)
                         }
                     }),
 
                 ),
-                $(go.Panel, "Auto",
+                $(go.Panel, "Spot",
+                {
+                    fromLinkable:true,
+                    toLinkable:true,
+                },
                     $(go.Shape, {
                         name: 'SHAPE_FIGURE',
                         portId: '',
                         cursor: 'pointer',
-                        fromEndSegmentLength: 40,
+                        //fromEndSegmentLength: 40,
                         fill: '#ffffff',
                         stroke: "#7e8186",
                         strokeWidth: 2,
+                        // fromLinkable: true, 
+                        // toLinkable: true,
                         // parameter1: 15,   // Rounded corners
                         // desiredSize: new go.Size(90, 80),  // Size of the rectangle,
                         // selectionAdorned: false,
-                        // fromLinkable: true,
-                        // fromLinkableSelfNode: true,
-                        // fromLinkableDuplicates: true,
-                        // toLinkable: true,
-                        // toLinkableSelfNode: true,
-                        // toLinkableDuplicates: true,
+                        fromLinkable: true,
+                        fromLinkableSelfNode: true,
+                        fromLinkableDuplicates: true,
+                        toLinkable: true,
+                        toLinkableSelfNode: true,
+                        toLinkableDuplicates: true,
                     },
                         new go.Binding("figure"),
                         new go.Binding("parameter1", "figure", v => {
@@ -279,11 +289,16 @@ function init() {
                                 return new go.Size(80, 80);
                             } else if (v == "Square") {
                                 return new go.Size(90, 90);
-                            }else {
+                            } else {
                                 return new go.Size(90, 80)
                             }
                         }),
                     ),
+
+                    makePort("T", go.Spot.Top, true, true),
+                    makePort("B", go.Spot.Bottom, true, true),
+                    makePort("R", go.Spot.Right, true, true),
+                    makePort("L", go.Spot.Left, true, true),
 
                     // Second panel: It is used to add shape inside shape
                     $(go.Panel, 'Horizontal',
@@ -316,10 +331,10 @@ function init() {
                             $(go.TextBlock, { stroke: '#ffffff', margin: 6, maxSize: new go.Size(400, NaN) }, new go.Binding("text", "text"))
                         ),
                     },
-                    makePort("T", go.Spot.Top, true, true),
-                    makePort("B", go.Spot.Bottom, true, true),
-                    makePort("R", go.Spot.Right, true, true),
-                    makePort("L", go.Spot.Left, true, true),
+                    // makePort("T", go.Spot.Top, true, true),
+                    // makePort("B", go.Spot.Bottom, true, true),
+                    // makePort("R", go.Spot.Right, true, true),
+                    // makePort("L", go.Spot.Left, true, true),
                 )
 
             ),
@@ -350,15 +365,15 @@ function init() {
 
 
 
-    this.myDiagram.linkTemplate = $(go.Link,
+   myDiagram.linkTemplate = $(go.Link,
 
         {
             routing: go.Link.AvoidsNodes,
             curve: go.Link.JumpOver,
             corner: 50,
             toShortLength: 0,
-            // relinkableFrom: false,
-            // relinkableTo: false,
+            relinkableFrom: true,
+            relinkableTo: true,
             // reshapable: true,
             // resegmentable: true,
             fromLinkable: true,
@@ -483,10 +498,10 @@ function init() {
 
 
 
-    const dataModel ={
+    const dataModel = {
         "class": "GraphLinksModel",
-        "nodeDataArray":nodeDataArray,
-        "linkDataArray":linkDataArray
+        "nodeDataArray": nodeDataArray,
+        "linkDataArray": linkDataArray
     }
 
     myDiagram.model = go.Model.fromJson(dataModel);
@@ -541,35 +556,35 @@ function textStyle() {
 function makePort(name, spot, output, input) {
     const $ = go.GraphObject.make;
     return $(go.Shape, "Circle",
-      {
+        {
 
-        fill: null,  // not seen, by default; set to a translucent gray by showSmallPorts, defined below
-        stroke: null,
-        desiredSize: new go.Size(11, 11),
-        alignment: spot,  // align the port on the main Shape
-        alignmentFocus: spot,  // just inside the Shape
-        portId: name,  // declare this object to be a "port"
-        fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
-        fromLinkable: output, toLinkable: input,  // declare whether the user may draw links to/from here
-        cursor: "pointer"
-      },
-      {
-        toolTip: $(
-          go.Adornment,
-          "Auto",
-          $(go.Shape, { fill: "#000000" }),
-          $(go.TextBlock, { stroke: '#ffffff', margin: 6, maxSize: new go.Size(400, NaN), text: 'Drag sequence flow to connect task.' })
-        ),
-      },
+            fill: null,  // not seen, by default; set to a translucent gray by showSmallPorts, defined below
+            stroke: null,
+            desiredSize: new go.Size(11, 11),
+            alignment: spot,  // align the port on the main Shape
+            alignmentFocus: spot,  // just inside the Shape
+            portId: name,  // declare this object to be a "port"
+            fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
+            fromLinkable: true, toLinkable: true,  // declare whether the user may draw links to/from here
+            cursor: "pointer"
+        },
+        {
+            toolTip: $(
+                go.Adornment,
+                "Auto",
+                $(go.Shape, { fill: "#000000" }),
+                $(go.TextBlock, { stroke: '#ffffff', margin: 6, maxSize: new go.Size(400, NaN), text: 'Drag sequence flow to connect task.' })
+            ),
+        },
     );
 }
 function showSmallPorts(node, show) {
     node.ports.each(port => {
-      if (port.portId !== "") {  // don't change the default port, which is the big shape
-        port.fill = show ? "rgba(0,0,0,.3)" : null;
-      }
+        if (port.portId !== "") {  // don't change the default port, which is the big shape
+            port.fill = show ? "rgba(0,0,0,.3)" : null;
+        }
     });
-  }
+}
 
 function hideCX() {
     if (myDiagram.currentTool instanceof go.ContextMenuTool) {
@@ -579,7 +594,7 @@ function hideCX() {
 selectedNode = null;
 function addNewNode(selectedNode, myDiagram) {
 
-    let newNodeData = { "key": myDiagram.model.nodeDataArray.length + 1, "figure": "RoundedRectangle", "text": "new node", source: 'images/ai.png', loc: '0 0',type:'RoundedRectangle' }
+    let newNodeData = { "key": myDiagram.model.nodeDataArray.length + 1, "figure": "RoundedRectangle", "text": "new node", source: 'images/ai.png', loc: '0 0', type: 'RoundedRectangle' }
     myDiagram.model.addNodeData(newNodeData);
 
     let pos = selectedNode.location;
