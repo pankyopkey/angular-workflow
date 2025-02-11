@@ -50,7 +50,7 @@ function init() {
         "clickCreatingTool.archetypeNodeData": { text: "Node", color: "lightgray" },
         //initialAutoScale: go.AutoScale.UniformToFill,
         'linkingTool.direction': go.LinkingDirection.AllSides,
-        grid: $(go.Panel, "Grid",{ gridCellSize: new go.Size(20, 20) },$(go.Shape, "LineH", { strokeDashArray: [1, 20], stroke:'#7e8186' })),
+        grid: $(go.Panel, "Grid", { gridCellSize: new go.Size(20, 20) }, $(go.Shape, "LineH", { strokeDashArray: [1, 20], stroke: '#7e8186' })),
         layout: new go.LayeredDigraphLayout({
             isInitial: true,
             isOngoing: false,
@@ -82,14 +82,14 @@ function init() {
         hideContextMenu()
     }
 
-      // This is the actual HTML context menu:
-      let cxElement = document.getElementById('contextMenu');
+    // This is the actual HTML context menu:
+    let cxElement = document.getElementById('contextMenu');
 
-      // an HTMLInfo object is needed to invoke the code to set up the HTML cxElement
-      let myContextMenu = new go.HTMLInfo({
-          show: showContextMenu,
-          hide: hideContextMenu
-      });
+    // an HTMLInfo object is needed to invoke the code to set up the HTML cxElement
+    let myContextMenu = new go.HTMLInfo({
+        show: showContextMenu,
+        hide: hideContextMenu
+    });
 
     // define the Node template
     myDiagram.nodeTemplate = $(go.Node, 'Auto', {
@@ -97,8 +97,8 @@ function init() {
         shadowBlur: 0,
         shadowColor: blueShadow,
         cursor: 'pointer',
-        contextMenu : myContextMenu,
-        selectionAdorned:false,
+        contextMenu: myContextMenu,
+        selectionAdorned: false,
         shadowOffset: new go.Point(4, 6),
         mouseEnter: (e, obj) => {
             changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
@@ -114,8 +114,8 @@ function init() {
         $(go.Shape, { strokeWidth: 0, fill: "transparent" }),
         $(go.Panel, "Vertical", {},
 
-            $(go.Panel, "Auto", { height: 30, defaultStretch: go.Stretch.Horizontal,alignment: go.Spot.TopCenter,alignmentFocus: go.Spot.BottomLeft,},
-                $(go.Panel, "Horizontal", { name: "MENU_SECTION", visible: false,defaultStretch: go.Stretch.Horizontal, alignment: go.Spot.TopRight,alignmentFocus: go.Spot.BottomLeft, },
+            $(go.Panel, "Auto", { height: 30, defaultStretch: go.Stretch.Horizontal, alignment: go.Spot.TopCenter, alignmentFocus: go.Spot.BottomLeft, },
+                $(go.Panel, "Horizontal", { name: "MENU_SECTION", visible: false, defaultStretch: go.Stretch.Horizontal, alignment: go.Spot.TopRight, alignmentFocus: go.Spot.BottomLeft, },
                     $(go.Picture, {
                         name: 'INSIDE_SHAPE',
                         desiredSize: new go.Size(12, 12),
@@ -175,7 +175,7 @@ function init() {
                         filter: 'grayscale(100%)',
                         click: (e, obj) => {
                             console.log(obj)
-                            showContextMenu(obj,myDiagram)
+                            showContextMenu(obj, myDiagram)
                         },
                         mouseEnter: (e, obj) => {
                             obj.filter = 'grayscale(0%)'
@@ -258,24 +258,24 @@ function init() {
             fromSpot: go.Spot.AllSides,
             toSpot: go.Spot.AllSides
         },
-        { 
+        {
             selectable: false,
             mouseEnter: (e, obj) => {
                 changeProperty(obj, 'LINK_MENU_SECTION', 'visible', true);
                 const shape = obj.findObject('LINK_LINE');
                 const toArrowTip = obj.findObject('AH');
-                if(shape && toArrowTip){
+                if (shape && toArrowTip) {
                     shape.stroke = '#e74266';
                     toArrowTip.fill = '#e74266';
                     toArrowTip.stroke = '#e74266';
-                    
+
                 }
             },
             mouseLeave: (e, obj) => {
                 changeProperty(obj, 'LINK_MENU_SECTION', 'visible', false)
                 const shape = obj.findObject('LINK_LINE');
                 const toArrowTip = obj.findObject('AH');
-                if(shape && toArrowTip){
+                if (shape && toArrowTip) {
                     shape.stroke = '#7e8186';
                     toArrowTip.fill = '#7e8186';
                     toArrowTip.stroke = '#7e8186';
@@ -284,17 +284,17 @@ function init() {
             },
         },
         $(go.Shape, { isPanelMain: true, strokeWidth: 20, stroke: "transparent" }),
-        $(go.Shape, { name:'LINK_LINE', isPanelMain: true, stroke: "#7e8186", strokeWidth: 2, toLinkable: true, toLinkableSelfNode: true }), // the main path
+        $(go.Shape, { name: 'LINK_LINE', isPanelMain: true, stroke: "#7e8186", strokeWidth: 2, toLinkable: true, toLinkableSelfNode: true }), // the main path
         $(go.Shape, { name: "AH", toArrow: "RoundedTriangle", scale: 1.2, fill: "#7e8186", stroke: "#7e8186", toLinkable: true, toLinkableSelfNode: true }),  // the arrowhead
 
         $(go.Panel, "Horizontal",
-            {margin: new go.Margin(-20, 20, -20, 20), name:'LINK_MENU_SECTION', visible: false},
-            $(go.Panel, 'Spot', { margin:3, cursor: 'pointer'}, 
+            { margin: new go.Margin(-20, 20, -20, 20), name: 'LINK_MENU_SECTION', visible: false },
+            $(go.Panel, 'Spot', { margin: 3, cursor: 'pointer' },
                 {
                     mouseEnter: (e, obj) => {
                         const shape = obj.findObject('IMG_BOX');
                         const image = obj.findObject('INSIDE_SHAPE');
-                        if(shape && image){
+                        if (shape && image) {
                             shape.stroke = '#e74266';
                             image.filter = 'grayscale(0%)'
                         }
@@ -302,16 +302,17 @@ function init() {
                     mouseLeave: (e, obj) => {
                         const shape = obj.findObject('IMG_BOX');
                         const image = obj.findObject('INSIDE_SHAPE');
-                        if(shape && image){
+                        if (shape && image) {
                             shape.stroke = '#7e8186';
                             image.filter = 'grayscale(100%)'
                         }
                     },
                     click: (e, obj) => {
-                        console.log(obj)
+                    
+                       addNewNode(obj.part.fromNode,myDiagram)
                     },
                 },
-                new go.Shape("RoundedRectangle", {name:'IMG_BOX', width: 20, height: 20, strokeWidth: 1, fill: '#fff', stroke: "#7e8186" } ),
+                new go.Shape("RoundedRectangle", { name: 'IMG_BOX', width: 20, height: 20, strokeWidth: 1, fill: '#fff', stroke: "#7e8186" }),
                 $(go.Panel, "Spot",
                     $(go.Picture, {
                         name: 'INSIDE_SHAPE',
@@ -321,16 +322,22 @@ function init() {
                         margin: 2,
                         filter: 'grayscale(100%)',
                         imageStretch: go.ImageStretch.Uniform,
+                        click: (e, obj,p) => {
+                      
+                            let fromNode = obj.fromNode; 
+                            let toNode = obj.toNode; 
+                            console.log(obj,fromNode)
+                        },
                         // stroke:'#e74266',
                     }),
                 )
             ),
-            $(go.Panel, 'Spot',  { margin:3, cursor: 'pointer'}, 
+            $(go.Panel, 'Spot', { margin: 3, cursor: 'pointer' },
                 {
                     mouseEnter: (e, obj) => {
                         const shape = obj.findObject('IMG_BOX');
                         const image = obj.findObject('INSIDE_SHAPE');
-                        if(shape && image){
+                        if (shape && image) {
                             shape.stroke = '#e74266';
                             image.filter = 'grayscale(0%)'
                         }
@@ -338,7 +345,7 @@ function init() {
                     mouseLeave: (e, obj) => {
                         const shape = obj.findObject('IMG_BOX');
                         const image = obj.findObject('INSIDE_SHAPE');
-                        if(shape && image){
+                        if (shape && image) {
                             shape.stroke = '#7e8186';
                             image.filter = 'grayscale(100%)'
                         }
@@ -347,7 +354,7 @@ function init() {
                         console.log(obj)
                     },
                 },
-                new go.Shape("RoundedRectangle", {name:'IMG_BOX', width: 20, height: 20, strokeWidth: 1, fill: '#fff', stroke: "#7e8186" } ),
+                new go.Shape("RoundedRectangle", { name: 'IMG_BOX', width: 20, height: 20, strokeWidth: 1, fill: '#fff', stroke: "#7e8186" }),
                 $(go.Panel, "Spot",
                     $(go.Picture, {
                         name: 'INSIDE_SHAPE',
@@ -372,11 +379,11 @@ function init() {
 
     function showContextMenu(obj, diagram, tool) {
         // Show only the relevant buttons given the current state.
-
+        selectedNode = obj;
         cxElement.classList.add('show-menu');
         // we don't bother overriding positionContextMenu, we just do it here:
         var mousePt = diagram.lastInput.viewPoint;
-        cxElement.style.left = mousePt.x +130 +'px';
+        cxElement.style.left = mousePt.x + 130 + 'px';
         cxElement.style.top = mousePt.y + 'px';
 
     }
@@ -384,7 +391,7 @@ function init() {
     function hideContextMenu() {
         cxElement.classList.remove('show-menu');
     }
-   
+
 
 
 }
@@ -415,4 +422,48 @@ function textStyle() {
         editable: true,
         font: bigfont
     };
+}
+
+function hideCX() {
+    if (myDiagram.currentTool instanceof go.ContextMenuTool) {
+        myDiagram.currentTool.doCancel();
+    }
+}
+selectedNode = null;
+function addNewNode(selectedNode,myDiagram) {
+   
+    let newNodeData = { "key": myDiagram.model.nodeDataArray.length + 1, "figure": "RoundedRectangle", "text": "new node", source: 'images/ai.png', loc: '0 0', }
+    myDiagram.model.addNodeData(newNodeData);
+
+    let pos = selectedNode.location;
+
+    let newPos = new go.Point(pos.x + 200, pos.y);
+
+    myDiagram.model.setDataProperty(newNodeData, 'loc', newPos.toString());
+
+    
+    let linkData1 = {
+        from: selectedNode.data.key,
+        to: newNodeData.key
+    };
+
+    let linkData2 = null;
+
+    if (selectedNode.findLinksOutOf().count > 0) {
+        let outgoingLink = selectedNode.findLinksOutOf().first();
+        myDiagram.model.removeLinkData(outgoingLink.data);
+        linkData2 = {
+            from: newNodeData.key,
+            to: outgoingLink.toNode.data.key
+        };
+    }
+
+
+    myDiagram.model.addLinkData(linkData1);
+    if (linkData2) {
+        myDiagram.model.addLinkData(linkData2);
+    }
+ 
+    myDiagram.layoutDiagram(true);
+
 }
