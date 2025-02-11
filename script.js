@@ -94,23 +94,25 @@ function init() {
 
     // define the Node template
     myDiagram.nodeTemplate = $(go.Node, 'Auto', {
-        isShadowed: false,
-        shadowBlur: 0,
-        shadowColor: blueShadow,
-        cursor: 'pointer',
-        contextMenu: myContextMenu,
-        selectionAdorned: false,
-        shadowOffset: new go.Point(4, 6),
-        mouseEnter: (e, obj) => {
-            changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
-            changeProperty(obj, 'MENU_SECTION', 'visible', true)
+            isShadowed: false,
+            shadowBlur: 0,
+            shadowColor: blueShadow,
+            cursor: 'pointer',
+            contextMenu: myContextMenu,
+            selectionAdorned: false,
+            shadowOffset: new go.Point(4, 6),
+            locationSpot:go.Spot.Center, 
+            locationObjectName: "SHAPE_FIGURE",
+            mouseEnter: (e, obj) => {
+                changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
+                changeProperty(obj, 'MENU_SECTION', 'visible', true)
+            },
+            mouseLeave: (e, obj) => {
+                changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
+                changeProperty(obj, 'MENU_SECTION', 'visible', false)
+            },
+            selectionChanged: onSelectionChanged
         },
-        mouseLeave: (e, obj) => {
-            changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
-            changeProperty(obj, 'MENU_SECTION', 'visible', false)
-        },
-        selectionChanged: onSelectionChanged
-    },
         // Main Vertical panel for layout
         $(go.Shape, { strokeWidth: 0, fill: "transparent" }),
         $(go.Panel, "Vertical", {},
@@ -192,7 +194,7 @@ function init() {
                 $(go.Shape, { name: 'Palceholder', strokeWidth: 0, fill: "transparent", parameter1: 20 }).bind('figure'),
                 $(go.Panel, "Auto",
                     new go.Shape({
-                        name: 'SHAPE',
+                        name: 'SHAPE_FIGURE',
                         portId: '',
                         cursor: 'pointer',
                         fromEndSegmentLength: 40,
@@ -256,7 +258,8 @@ function init() {
                 }).bindTwoWay('text')  // Bind text dynamically
                     .bind("visible", "type", v => v != 'ChainProcess')
             )
-        )
+        ),
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
     )
 
 
