@@ -3,11 +3,12 @@ var isDarkMode = false; // is accessed by html elements (button) so must be decl
 
 let nodeDataArray = [
     // { "key": 1, "category": "firstNode", "text": "Add First Step.." },
-    { "key": 1, "figure": "RoundedLeftRectangle", "text": "When clicking ‘Test workflow’", source: 'images/ai.png' },
-    { "key": 2, "figure": "RoundedRectangle", "text": "When chat message received", source: 'images/uparrow.png' },
-    { "key": 4, "figure": "RoundedSquare", "text": "Basic LLM Chain", source: 'images/code.png' },
-    { "key": 3, "figure": "Circle", "text": "Code", source: 'images/ai.png' },
-    { "key": 5, "figure": "RoundedRectangle", "text": "Azure OpenAI Chat Model", source: 'images/ai.png' }
+    { "key": 1, "figure": "RoundedLeftRectangle", "text": "When clicking ‘Test workflow’", source: 'images/ai.png', type: '' },
+    { "key": 2, "figure": "RoundedRectangle", "text": "When chat message received", source: 'images/uparrow.png', type: '' },
+    { "key": 4, "figure": "RoundedSquare", "text": "Basic LLM Chain", source: 'images/code.png', type: '' },
+    { "key": 3, "figure": "Circle", "text": "Code", source: 'images/ai.png', type: '' },
+    { "key": 5, "figure": "RoundedRectangle", "text": "Azure OpenAI Chat Model", source: 'images/ai.png', type: '' },
+    { "key": 6, "figure": "RoundedRectangle", "text": "Block chain", source: 'images/ai.png', type: 'ChainProcess' }
 
 ]
 let linkDataArray = [
@@ -198,8 +199,8 @@ function init() {
                         fill: '#ffffff',
                         stroke: "#7e8186",
                         strokeWidth: 2,
-                        parameter1: 15,   // Rounded corners
-                        desiredSize: new go.Size(90, 80),  // Size of the rectangle,
+                        // parameter1: 15,   // Rounded corners
+                        // desiredSize: new go.Size(90, 80),  // Size of the rectangle,
                         // selectionAdorned: false,
                         // fromLinkable: true,
                         // fromLinkableSelfNode: true,
@@ -208,16 +209,34 @@ function init() {
                         // toLinkableSelfNode: true,
                         // toLinkableDuplicates: true,
                     }
-                    ).bind('figure'),
+                    ).bind('figure')
+                        .bind("desiredSize", "type", v => v == 'ChainProcess' ? new go.Size(200, 80) : new go.Size(90, 80))
+                        .bind("parameter1", "figure", v => v == 'RoundedRectangle' ? 6 : 15),
 
                     // Second panel: It is used to add shape inside shape
-                    $(go.Picture, {
-                        name: 'INSIDE_SHAPE',
-                        desiredSize: new go.Size(40, 40)
-                    },
-                        new go.Binding("source"),
+                    $(go.Panel, 'Horizontal',
+                        $(go.Picture, {
+                            name: 'INSIDE_SHAPE',
+                            desiredSize: new go.Size(40, 40)
+                        },
+                            new go.Binding("source"),
+                            new go.Binding("desiredSize", "type", v => v == 'ChainProcess' ? new go.Size(30, 30) : new go.Size(40, 40)),
 
+                        ),
+                        new go.TextBlock('', {  // Empty string as placeholder for 'text' binding
+                            wrap: go.TextBlock.WrapFit,
+                            textAlign: "center",
+                            maxLines: 3,
+                            overflow: go.TextBlock.OverflowEllipsis,
+                            alignment: go.Spot.Center,
+                            font: bigfont,
+                            desiredSize: new go.Size(140, NaN),
+                            margin: 5,
+                            name: 'TEXTBLOCK_NAME',
+                        }).bindTwoWay('text')
+                            .bind("visible", "type", v => v == 'ChainProcess')
                     )
+
                 )
 
             ),
@@ -235,6 +254,7 @@ function init() {
                     margin: 5,
                     name: 'TEXTBLOCK_NAME',
                 }).bindTwoWay('text')  // Bind text dynamically
+                    .bind("visible", "type", v => v != 'ChainProcess')
             )
         )
     )
@@ -308,8 +328,8 @@ function init() {
                         }
                     },
                     click: (e, obj) => {
-                    
-                       addNewNode(obj.part.fromNode,myDiagram)
+
+                        addNewNode(obj.part.fromNode, myDiagram)
                     },
                 },
                 new go.Shape("RoundedRectangle", { name: 'IMG_BOX', width: 20, height: 20, strokeWidth: 1, fill: '#fff', stroke: "#7e8186" }),
@@ -322,11 +342,11 @@ function init() {
                         margin: 2,
                         filter: 'grayscale(100%)',
                         imageStretch: go.ImageStretch.Uniform,
-                        click: (e, obj,p) => {
-                      
-                            let fromNode = obj.fromNode; 
-                            let toNode = obj.toNode; 
-                            console.log(obj,fromNode)
+                        click: (e, obj, p) => {
+
+                            let fromNode = obj.fromNode;
+                            let toNode = obj.toNode;
+                            console.log(obj, fromNode)
                         },
                         // stroke:'#e74266',
                     }),
@@ -430,8 +450,8 @@ function hideCX() {
     }
 }
 selectedNode = null;
-function addNewNode(selectedNode,myDiagram) {
-   
+function addNewNode(selectedNode, myDiagram) {
+
     let newNodeData = { "key": myDiagram.model.nodeDataArray.length + 1, "figure": "RoundedRectangle", "text": "new node", source: 'images/ai.png', loc: '0 0', }
     myDiagram.model.addNodeData(newNodeData);
 
@@ -441,7 +461,7 @@ function addNewNode(selectedNode,myDiagram) {
 
     myDiagram.model.setDataProperty(newNodeData, 'loc', newPos.toString());
 
-    
+
     let linkData1 = {
         from: selectedNode.data.key,
         to: newNodeData.key
@@ -463,7 +483,7 @@ function addNewNode(selectedNode,myDiagram) {
     if (linkData2) {
         myDiagram.model.addLinkData(linkData2);
     }
- 
+
     myDiagram.layoutDiagram(true);
 
 }
