@@ -157,6 +157,8 @@ function init() {
                         filter: 'grayscale(100%)',
                         click: (e, obj) => {
                             console.log(obj)
+
+                            // myDiagram.model.removeNodeData(obj.part.data);
                         },
                         mouseEnter: (e, obj) => {
                             obj.filter = 'grayscale(0%)'
@@ -501,6 +503,16 @@ function init() {
                         filter: 'grayscale(100%)',
                         imageStretch: go.ImageStretch.Uniform,
                         // stroke:'#e74266',
+                        click: (e, obj) => {
+                            console.log(obj)
+
+                            myDiagram.model.removeLinkData(obj.part.data);
+                            let node = myDiagram.findNodeForKey(obj.part.data.from);
+                            if(node){
+                                addNewNode(node,myDiagram,'PlusLine')
+                            }
+                           
+                        },
                     }),
                 )
             ),
@@ -651,7 +663,8 @@ function addNewNode(selectedNode, myDiagram, type) {
         myDiagram.model.addLinkData(linkData2);
     }
 
-    myDiagram.layoutDiagram(true);
+    myDiagram.model = go.Model.fromJson( myDiagram.model.toJson());
+    // myDiagram.layoutDiagram(true);
     let node = this.myDiagram.findNodeForKey(newNodeData.key);
 
     if (node && type !='PlusLine') {
