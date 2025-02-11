@@ -578,7 +578,7 @@ function hideCX() {
 selectedNode = null;
 function addNewNode(selectedNode, myDiagram) {
 
-    let newNodeData = { "key": myDiagram.model.nodeDataArray.length + 1, "figure": "RoundedRectangle", "text": "new node", source: 'images/ai.png', loc: '0 0', }
+    let newNodeData = { "key": myDiagram.model.nodeDataArray.length + 1, "figure": "RoundedRectangle", "text": "new node", source: 'images/ai.png', loc: '0 0',type:'RoundedRectangle' }
     myDiagram.model.addNodeData(newNodeData);
 
     let pos = selectedNode.location;
