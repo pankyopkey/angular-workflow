@@ -98,27 +98,28 @@ function init() {
 
     // define the Node template
     myDiagram.nodeTemplate = $(go.Node, 'Auto', {
-        isShadowed: false,
-        shadowBlur: 0,
-        shadowColor: blueShadow,
-        cursor: 'pointer',
-        contextMenu: myContextMenu,
-        selectionAdorned: false,
-        shadowOffset: new go.Point(4, 6),
-        locationSpot: go.Spot.Center,
-        locationObjectName: "SHAPE_FIGURE",
-        mouseEnter: (e, obj) => {
-            changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
-            changeProperty(obj, 'MENU_SECTION', 'visible', true);
-            showSmallPorts(obj, true)
+            isShadowed: false,
+            shadowBlur: 0,
+            shadowColor: blueShadow,
+            cursor: 'pointer',
+            contextMenu: myContextMenu,
+            selectionAdorned: false,
+            shadowOffset: new go.Point(4, 6),
+            locationSpot: go.Spot.Center,
+            locationObjectName: "SHAPE_FIGURE",
+            name:'NodeDiagram',
+            mouseEnter: (e, obj) => {
+                changeProperty(obj, 'PlUS_LINE', 'stroke', 'red')
+                changeProperty(obj, 'MENU_SECTION', 'visible', true);
+                showSmallPorts(obj, true)
+            },
+            mouseLeave: (e, obj) => {
+                changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
+                changeProperty(obj, 'MENU_SECTION', 'visible', false);
+                showSmallPorts(obj, false)
+            },
+            selectionChanged: onSelectionChanged
         },
-        mouseLeave: (e, obj) => {
-            changeProperty(obj, 'PlUS_LINE', 'stroke', 'gray')
-            changeProperty(obj, 'MENU_SECTION', 'visible', false);
-            showSmallPorts(obj, false)
-        },
-        selectionChanged: onSelectionChanged
-    },
         // Main Vertical panel for layout
         $(go.Shape, { strokeWidth: 0, fill: "transparent" }),
         $(go.Panel, "Vertical", {},
@@ -356,8 +357,8 @@ function init() {
             curve: go.Link.JumpOver,
             corner: 50,
             toShortLength: 0,
-            relinkableFrom: false,
-            relinkableTo: false,
+            // relinkableFrom: false,
+            // relinkableTo: false,
             // reshapable: true,
             // resegmentable: true,
             fromLinkable: true,
