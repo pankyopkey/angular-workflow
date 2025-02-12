@@ -238,7 +238,7 @@ function init() {
                             return new go.Size(110, 110);
                         }
                         else if (v == "PlusLine") {
-                            return new go.Size(40, 40);
+                            return new go.Size(30, 30);
                         }
                         else {
                             return new go.Size(110, 100)
@@ -279,9 +279,30 @@ function init() {
                             else if (v == 'RoundedLeftRectangle') {
                                 return 15;
                             }
-                            else if (v == 'Circle' || v == 'PlusLine') {
+                            else if (v == 'Circle'  ) {
                                 return 0;
-                            } else {
+                            } 
+                            else if (v == 'PlusLine' ) {
+                                return 15;
+                            } 
+                            else {
+                                return 8
+                            }
+                        }),
+                        new go.Binding("parameter1", "figure", v => {
+                            if (v == 'RoundedRectangle') {
+                                return 8;
+                            }
+                            else if (v == 'RoundedLeftRectangle') {
+                                return 15;
+                            }
+                            else if (v == 'Circle'  ) {
+                                return 0;
+                            } 
+                            else if (v == 'PlusLine' ) {
+                                return 15;
+                            } 
+                            else {
                                 return 8
                             }
                         }),
@@ -663,8 +684,8 @@ function addNewNode(selectedNode, myDiagram, type) {
         myDiagram.model.addLinkData(linkData2);
     }
 
-    myDiagram.model = go.Model.fromJson( myDiagram.model.toJson());
-    // myDiagram.layoutDiagram(true);
+    // myDiagram.model = go.Model.fromJson( myDiagram.model.toJson());
+    myDiagram.layoutDiagram(true);
     let node = this.myDiagram.findNodeForKey(newNodeData.key);
 
     if (node && type !='PlusLine') {
